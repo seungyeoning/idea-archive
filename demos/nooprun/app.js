@@ -36,7 +36,7 @@
     if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) {toast('음성 대신 화면 안내로 진행해요.');return;}
     try {const u=new SpeechSynthesisUtterance(message);u.lang='ko-KR';u.rate=.95;u.volume=.8;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);} catch {toast('이 환경에서는 시작 음성을 재생할 수 없어요.');}
   }
-  const icon = name => ({back:'<path d="m13 5-7 7 7 7"/>',sound:'<path d="m4 9 4 0 5-4v14l-5-4H4Z"/><path d="M17 8q4 4 0 8"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>'}[name]);
+  const icon = name => ({back:'<path d="m13 5-7 7 7 7"/>',sound:'<path d="m4 9 4 0 5-4v14l-5-4H4Z"/><path d="M17 8q4 4 0 8"/>',share:'<path d="M12 15V3m-4 4 4-4 4 4M6 10H4v11h16V10h-2"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>'}[name]);
   const iconButton = (name,action,label) => `<button class="icon-button" data-action="${action}" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon(name)}</svg></button>`;
   const brand = '<div class="app-brand">NOOPRUN<small>NOOP RUN CLUB</small></div>';
   const primary = (text,action,cls='') => `<button class="primary ${cls}" data-action="${action}">${text}<span class="arrow" aria-hidden="true">↗</span></button>`;
@@ -78,17 +78,10 @@
     const timer=`<strong class="timer" id="timer" role="timer" aria-label="빈둥 경과 시간">${formatTime(elapsed())}</strong>`;
     const pauseIcon='<rect x="6" y="4" width="4" height="20" rx="1"/><rect x="18" y="4" width="4" height="20" rx="1"/>';
     const playIcon='<path d="M8 4 24 14 8 24Z"/>';
+    const metrics=paused?`<div class="paused-metrics"><div>${timer}<small>빈둥 시간</small></div><div><strong>0.00</strong><small>이동 거리 (km)</small></div></div>`:`<div class="metric-tabs" role="group" aria-label="크게 볼 기록 선택"><button data-action="metric" data-metric="time" aria-pressed="${timeSelected}">${timeSelected?`<strong data-elapsed>${formatTime(elapsed())}</strong>`:timer}<small>빈둥 시간</small></button><button data-action="metric" data-metric="distance" aria-pressed="${!timeSelected}"><strong>0.00</strong><small>이동 거리 (km)</small></button></div>`;
     return `<section class="app-screen running" data-paused="${paused}">
       <header class="app-header"><div class="running-top"><i></i><span id="running-state">${paused?'움직이는 중':'빈둥 중'}</span></div>${iconButton('sound','sound',data.sound?'음성 끄기':'음성 켜기')}</header>
-      <p class="run-mode">${paused?'다시 누우면 이어서 기록해요.':'좋아요. 그 자세 그대로.'}</p>
-      <button class="metric-hero" data-action="metric" data-metric="${timeSelected?'distance':'time'}" aria-label="${timeSelected?'이동 거리 크게 보기':'빈둥 시간 크게 보기'}">
-        ${timeSelected?timer:'<strong class="hero-value">0.00</strong>'}<span class="hero-label">${timeSelected?'빈둥 시간':'이동 거리 (km)'}</span>
-      </button>
-      <div class="metric-tabs" role="group" aria-label="크게 볼 기록 선택">
-        <button data-action="metric" data-metric="time" aria-pressed="${timeSelected}">${timeSelected?`<strong data-elapsed>${formatTime(elapsed())}</strong>`:timer}<small>빈둥 시간</small></button>
-        <button data-action="metric" data-metric="distance" aria-pressed="${!timeSelected}"><strong>0.00</strong><small>이동 거리 (km)</small></button>
-      </div>
-      ${window.NooprunArt.markup('run-art')}
+      ${paused?`<div class="pause-scene">${window.NooprunArt.markup('run-art paused-art')}<p class="run-mode">다시 누우면 이어서 기록해요.</p></div>${metrics}`:`${metrics}<button class="metric-hero" data-action="metric" data-metric="${timeSelected?'distance':'time'}" aria-label="${timeSelected?'이동 거리 크게 보기':'빈둥 시간 크게 보기'}">${timeSelected?timer:'<strong class="hero-value">0.00</strong>'}<span class="hero-label">${timeSelected?'빈둥 시간':'이동 거리 (km)'}</span></button>${window.NooprunArt.markup('run-art')}<p class="run-mode">그 자세 그대로.</p>`}
       <div class="session-controls">
         ${paused?`<div class="session-control"><button class="session-circle stop" data-action="finish" aria-label="종료, 길게 누르기" aria-describedby="hold-hint"><svg class="hold-ring" viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="50"/></svg><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="5" y="5" width="18" height="18" rx="1"/></svg></button><span>종료</span><span class="hold-hint" id="hold-hint">길게 눌러 종료</span></div>`:''}
         <div class="session-control"><button class="session-circle" data-action="pause" aria-label="${paused?'다시 눕기':'잠깐 움직이기'}"><svg viewBox="0 0 28 28" aria-hidden="true">${paused?playIcon:pauseIcon}</svg></button><span>${paused?'다시 눕기':'잠깐 움직이기'}</span></div>
@@ -101,7 +94,28 @@
   }
   function completed() {
     if (!result) {view='home';return home();}
-    return `<section class="app-screen complete"><header class="app-header"><span class="finish-label">${result.demo?'시연 기록':'오늘의 기록'}</span>${iconButton('close','home','처음으로')}</header><h2>빈둥 완료.</h2><p class="complete-subtitle">오늘도, 가만히 완주.</p>${card(result)}<div class="share-tools"><label tabindex="0" id="photo-label">내 사진 넣기<input id="photo-input" type="file" accept="image/*" aria-label="공유 카드 배경 사진 선택"></label>${photo?'<button data-action="remove-photo">사진 빼기</button>':''}</div><p class="mood-label">지금 기분은 어때요? <span>선택</span></p><div class="mood-options" role="group" aria-label="완주 후 기분">${['개운해요','그냥 좋아요','아직 졸려요'].map(x=>`<button data-mood="${x}" aria-pressed="${result.mood===x}">${x}</button>`).join('')}</div><div class="result-actions">${primary('완주 카드 이미지 저장','export')}${primary('나의 기록 보기','history','paper')}</div><p class="saved-indicator">${result.demo?'시연 예시 · 실제 기록에는 포함되지 않아요':storageOK?'이 브라우저에 기록을 저장했어요':'현재 창에서만 기록을 보관하고 있어요'}</p></section>`;
+    const hour=new Date(result.finishedAt).getHours(),period=hour<6?'새벽':hour<12?'오전':hour<18?'오후':'저녁';
+    const clock=new Intl.DateTimeFormat('ko-KR',{hour:'numeric',minute:'2-digit'}).format(result.finishedAt);
+    return `<section class="app-screen complete record-detail-screen">
+      <header class="app-header">${iconButton('back','history','나의 기록으로')}<span class="finish-label">${result.demo?'시연 기록':'빈둥 완료'}</span>${iconButton('share','share','이 기록 공유하기')}</header>
+      <p class="record-date">${dateLabel(result.finishedAt)} · ${clock}</p><h2>${period}의 빈둥</h2>
+      <div class="summary-hero"><strong class="card-time${result.elapsedMs>=3600000?' long':''}">${formatTime(result.elapsedMs)}</strong><span>빈둥 시간</span></div>
+      <div class="summary-distance"><div><strong>0.00 <small>km</small></strong><span>이동 거리</span></div><p>오늘도,<br>가만히 완주.</p></div>
+      <p class="mood-label">쉬고 나니 어때요? <span>선택</span></p><div class="mood-options" role="group" aria-label="완주 후 기분">${['개운해요','그냥 좋아요','아직 졸려요'].map(x=>`<button data-mood="${x}" aria-pressed="${result.mood===x}">${x}</button>`).join('')}</div>
+      <div class="result-actions">${primary('공유하기','share')}${primary('완료','home','paper')}</div>
+      <p class="saved-indicator">${result.demo?'시연 예시 · 실제 기록에는 포함되지 않아요':storageOK?'이 브라우저에 기록을 저장했어요':'현재 창에서만 기록을 보관하고 있어요'}</p>
+    </section>`;
+  }
+  function shareView() {
+    if(!result){view='home';return home();}
+    return `<section class="app-screen complete share-editor">
+      <header class="app-header">${iconButton('back','complete','기록으로 돌아가기')}<h2>공유 카드</h2><span class="header-spacer" aria-hidden="true"></span></header>
+      ${card(result)}
+      <div class="share-tools"><label tabindex="0" id="photo-label">${photo?'사진 바꾸기':'내 사진 넣기'}<input id="photo-input" type="file" accept="image/*" aria-label="공유 카드 배경 사진 선택"></label>${photo?'<button data-action="remove-photo">포스터로 바꾸기</button>':''}</div>
+      <p class="share-caption">${photo?'내 사진 위에 오늘의 기록을 담아요.':'오늘의 빈둥을 한 장으로.'}</p>
+      <div class="result-actions">${primary('이미지 저장','export')}${primary('기록으로 돌아가기','complete','paper')}</div>
+      <p class="saved-indicator">사진은 업로드하지 않아요.</p>
+    </section>`;
   }
   function historyView() {
     const records=data.records,total=records.reduce((n,r)=>n+r.elapsedMs,0);
@@ -114,10 +128,11 @@
     cancelHold();
     if (view==='running'&&!active())view='home';
     $('#phone').dataset.view=view;
-    const views={home,countdown:counting,running,complete:completed,history:historyView,settings};
+    $('#phone').dataset.runState=view==='running'?active().status:'';
+    const views={home,countdown:counting,running,complete:completed,share:shareView,history:historyView,settings};
     $('#app').innerHTML=views[view]();
     window.NooprunArt.mount();
-    if (photo&&view==='complete')$('#result-card').style.backgroundImage=`url("${photo.url}")`;
+    if (photo&&view==='share')$('#result-card').style.backgroundImage=`url("${photo.url}")`;
     if (focus) {const target=$('#app h2')||$('#app .run-mode')||$('#app .countdown-wrap p');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}}
     updateTimer();
   }
@@ -125,7 +140,7 @@
   function go(screen) {
     if (data.active && screen==='home')screen='running';
     if (demoSession && screen!=='running')demoSession=null;
-    if (screen!=='complete')clearPhoto();
+    if (!['complete','share'].includes(screen))clearPhoto();
     view=screen;render(true);
   }
   function cancelCountdown() {clearInterval(countdownTimer);countdownTimer=null;view='home';render(true);}
@@ -219,11 +234,11 @@
   document.addEventListener('contextmenu',e=>{if(e.target.closest('[data-action=finish]'))e.preventDefault();});
   window.addEventListener('blur',cancelHold);
   async function choosePhoto(file) {
-    if(!file||view!=='complete')return;
+    if(!file||view!=='share')return;
     if(!file.type.startsWith('image/')){toast('사진 파일을 골라 주세요.');return;}
     if(file.size>20*1024*1024){toast('20MB 이하의 사진을 골라 주세요.');return;}
     clearPhoto();const token=photoToken,url=URL.createObjectURL(file),img=new Image();
-    img.onload=()=>{if(token!==photoToken||view!=='complete'){URL.revokeObjectURL(url);return;}photo={url,img};render();toast('사진은 이 창에서만 사용하고 업로드하지 않아요.');};
+    img.onload=()=>{if(token!==photoToken||!['share','complete'].includes(view)){URL.revokeObjectURL(url);return;}photo={url,img};if(view==='share')render();toast('사진은 이 창에서만 사용하고 업로드하지 않아요.');};
     img.onerror=()=>{URL.revokeObjectURL(url);toast('사진을 읽지 못했어요. JPG나 PNG로 다시 골라 주세요.');};img.src=url;
   }
   function exportCard() {
@@ -249,7 +264,7 @@
   function note(name='experience') {
     document.querySelectorAll('[data-note]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.note===name)));
     const content={
-      experience:`<p class="note-kicker">01 / A VERY SERIOUS REST</p><h2>화면은 진지하게.<br>기록은 조금 엉뚱하게.</h2><p class="lede">나이키런 같은 익숙한 운동 기록 흐름에, 누워서 빈둥거린 시간을 담아요. 재미가 터지는 순간은 0.00km로 완주 카드를 받았을 때예요.</p><ol class="flow"><li><strong>편한 자세로 시작</strong>목표 시간 없이, 시작 버튼만 눌러요.</li><li><strong>“운동을 시작했습니다.”</strong>3초 뒤 음성과 함께 빈둥 타이머가 돌아요.</li><li><strong>잠깐 움직였다가, 다시 눕기</strong>기록을 마칠 땐 일시정지 후 종료를 길게 눌러요.</li><li><strong>완주 카드를 남겨요</strong>내 사진에 빈둥 시간과 기분을 얹어요.</li></ol><p class="note-callout">오래 누워 있는 경쟁보다 “나 오늘 이것도 완주했어”라는 가벼운 농담. 기록을 받은 사람이 한 번 웃고, 친구에게 보내고 싶은 순간을 만듭니다.</p>`,
+      experience:`<p class="note-kicker">01 / A VERY SERIOUS REST</p><h2>화면은 진지하게.<br>기록은 조금 엉뚱하게.</h2><p class="lede">나이키런 같은 익숙한 운동 기록 흐름에, 누워서 빈둥거린 시간을 담아요. 재미가 터지는 순간은 0.00km로 완주 카드를 받았을 때예요.</p><ol class="flow"><li><strong>편한 자세로 시작</strong>목표 시간 없이, 시작 버튼만 눌러요.</li><li><strong>“운동을 시작했습니다.”</strong>3초 뒤 음성과 함께 빈둥 타이머가 돌아요.</li><li><strong>잠깐 움직였다가, 다시 눕기</strong>기록을 마칠 땐 일시정지 후 종료를 길게 눌러요.</li><li><strong>기록을 확인하고 공유해요</strong>완료한 기록에서 공유를 누르면 사진 카드 편집으로 이어져요.</li></ol><p class="note-callout">오래 누워 있는 경쟁보다 “나 오늘 이것도 완주했어”라는 가벼운 농담. 기록을 받은 사람이 한 번 웃고, 친구에게 보내고 싶은 순간을 만듭니다.</p>`,
       scope:`<p class="note-kicker">02 / FIRST VERSION</p><h2>한 번의 완주가<br>끝까지 이어지도록.</h2><h3>먼저 만들 것</h3><ul class="scope-list"><li>시작·멈춤·재개·완주 타이머와 음성</li><li>목표 시간 없이 자유롭게 기록</li><li>날짜별 기록과 누적 빈둥 시간</li><li>사진·기분을 넣은 완주 카드 저장</li><li>로그인 없이 시작하는 흐름</li></ul><h3>나중에 검토할 것</h3><ul class="scope-list"><li>캐릭터 자세, 기록 카드, 음성 팩</li><li>잠금 화면·다이나믹 아일랜드의 타이머</li><li>가격은 반응을 본 뒤 결정</li></ul><p class="note-callout">현재는 브라우저 안의 동작 시안이에요. 원래 모바일 프로젝트의 빌드·기기 검증은 별도이며, 수면·칼로리·건강 상태를 측정하지 않아요.</p><h3>첫 반응에서 볼 것</h3><p class="lede">설명 없이 농담을 이해하는지, 한 번 완주하는지, 카드로 친구에게 보내고 싶어 하는지. 다시 켜는 이유까지 확인해요.</p>`,
       post:`<p class="note-kicker">03 / ASK BEFORE BUILDING MORE</p><h2>친구한테 자랑할<br>쓸데있는 기록.</h2><p class="lede">계획 중인 앱으로 소개하는 쓰레드 초안이에요.</p><textarea class="post-copy" id="post-copy" aria-label="쓰레드 게시글 초안">${esc(post)}</textarea><button class="copy-post" data-action="copy-post">글 복사 ↗</button><p class="note-callout">영상은 화면 방향을 고른 뒤 제작해요. 이번 시안에서는 이미지를 저장할 수 있고, 게시나 외부 전송은 하지 않아요.</p>`
     };
@@ -262,7 +277,7 @@
     if(b.dataset.record){result=data.records.find(r=>r.id===b.dataset.record);clearPhoto();view='complete';render(true);return;}
     if(b.dataset.mood){if(!result)return;result.mood=b.dataset.mood;const r=data.records.find(r=>r.id===result.id);if(r){r.mood=result.mood;persist();}render();return;}
     const action=b.dataset.action;
-    if(['home','history','settings'].includes(action)){go(action);return;}
+    if(['home','history','settings','share','complete'].includes(action)){go(action);return;}
     if(action==='start'){beginCountdown();return;}
     if(action==='cancel-countdown'){cancelCountdown();return;}
     if(action==='metric'){runMetric=b.dataset.metric==='distance'?'distance':'time';render();$(`.metric-tabs [data-metric=${runMetric}]`)?.focus({preventScroll:true});return;}

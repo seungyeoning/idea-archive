@@ -61,3 +61,60 @@
 .photo-preview:before{border-radius:inherit}
 .photo-preview .card-top,.photo-preview .card-footer span{color:#fff}
 @media(prefers-reduced-motion:reduce){.pose-stage img,.session-circle{transition:none}}
+
+/* Public NRC references: small metrics above the readout; paused view is distinct.
+   Lime, two honest metrics, and rest artwork are Nooprun's own choices. */
+.phone[data-view=running][data-run-state=running]{background:#e4ff3b;border-color:#d4e935}
+.running[data-paused=false]{background:#e4ff3b}
+.running[data-paused=false] .icon-button{border-color:#1114}
+.running[data-paused=false] .metric-tabs{border:0;margin-top:16px}
+.running[data-paused=false] .metric-tabs button{min-height:72px;padding:12px 3px}
+.running[data-paused=false] .metric-tabs button+button:before{background:#1113}
+.running[data-paused=false] .metric-tabs small{color:#414827}
+.running[data-paused=false] .metric-tabs [aria-pressed=true]:after{display:none}
+.running[data-paused=false] .metric-hero{min-height:202px;padding-top:16px}
+.running[data-paused=false] .hero-value,.running[data-paused=false] .metric-hero .timer{font-size:6rem;font-style:italic;letter-spacing:-.07em;padding-right:6px}
+.running[data-paused=false] .metric-hero .timer.long{font-size:3.5rem}
+.running[data-paused=false] .hero-label{color:#414827;font-size:.875rem;margin-top:11px}
+.running[data-paused=false] .metric-hero:active{background:#1111}
+.running[data-paused=false] .run-art{width:200px;height:133px;margin:0 auto}
+.running[data-paused=false] .run-mode{font-size:.75rem;color:#414827;margin:8px 0 0}
+.running[data-paused=false] .session-circle{background:#111;color:#e4ff3b;width:86px;height:86px}
+.running[data-paused=false] .demo-badge{color:#414827}
+.pause-scene{margin:28px -25px 0;background:#f4f5f0;padding:22px 25px 23px}
+.pause-scene .run-art{width:264px;height:176px;margin:0 auto}
+.pause-scene .run-mode{margin-top:14px;font-size:.75rem;color:#565b50}
+.paused-metrics{display:grid;grid-template-columns:1fr 1fr;padding:28px 0;border-bottom:1px solid #e8e8e8;text-align:center}
+.paused-metrics>div{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.paused-metrics>div+div{border-left:1px solid #e8e8e8}
+.paused-metrics strong,.paused-metrics .timer,.paused-metrics .timer.long{font:700 1.875rem/1.1 var(--sans);letter-spacing:-.04em;color:#111;margin:0;font-variant-numeric:tabular-nums}
+.paused-metrics .timer.long{font-size:1.35rem}
+.paused-metrics small{font-size:.75rem;color:#666}
+.running[data-paused=true] .session-controls{padding-top:30px}
+.phone[data-view=share]{background:#fff;color:#111;border-color:#dededb}
+.record-detail-screen .app-header,.share-editor .app-header{justify-content:space-between}
+.record-detail-screen .icon-button,.share-editor .icon-button{border:0}
+.record-date{font-size:.75rem;color:#666;margin-top:28px;line-height:1.6}
+.record-detail-screen h2{font-size:1.5rem;margin-top:7px;letter-spacing:-.045em}
+.summary-hero{padding:18px 0 27px}
+.summary-hero .card-time{font-size:5.25rem;font-style:italic;letter-spacing:-.065em;margin:0}
+.summary-hero .card-time.long{font-size:3.5rem}
+.summary-hero>span{font-size:.8125rem;color:#666;display:block;margin-top:8px}
+.summary-distance{border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:center;padding:23px 0}
+.summary-distance strong{font-size:1.875rem;font-weight:700;letter-spacing:-.04em}
+.summary-distance strong small{font-size:.875rem;font-weight:500}
+.summary-distance div>span{display:block;font-size:.75rem;margin-top:5px;color:#666}
+.summary-distance p{font-size:.8125rem;line-height:1.55;color:#666;text-align:right}
+.record-detail-screen .mood-label{margin-top:27px}
+.share-editor .app-header h2{font-size:1rem;margin:0;letter-spacing:-.025em}
+.header-spacer{width:44px}
+.share-editor .result-card{margin-top:25px;padding:24px 23px;background:#e4ff3b;border:0;border-radius:0;min-height:360px;display:flex;flex-direction:column}
+.share-editor .card-top{color:#373e20}
+.share-editor .card-time{margin-top:54px;font-size:4.5rem;font-style:italic}
+.share-editor .card-time.long{font-size:2.9rem}
+.share-editor .card-desc,.share-editor .card-footer span{color:#40462b}
+.share-editor .card-rule{margin-top:auto;border-color:#1113}
+.share-editor .photo-preview{background-color:#555;color:#fff}
+.share-editor .photo-preview .card-top,.share-editor .photo-preview .card-desc,.share-editor .photo-preview .card-footer span{color:#fff}
+.share-editor .photo-preview .card-rule{border-color:#fff5}
+.share-caption{font-size:.75rem;line-height:1.7;color:#666;text-align:center;margin-top:15px}

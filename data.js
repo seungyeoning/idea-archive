@@ -44,7 +44,7 @@ window.ARCHIVE_ITEMS = [
     tagline: '아무것도 안 한 시간도, 나의 기록.',
     summary: '내가 몇 분이나 누워 뒹굴거렸는지 궁금해서 생각한 앱이에요. 누운 시간을 재고, 러닝 완주처럼 0.00km 기록 카드로 남겨요.',
     status: '조작 시안', theme: '#f5f5f7', cover: 'assets/nooprun-poses.png', demo: 'demos/nooprun/', video: 'assets/nooprun.mp4',
-    features: ['7가지 쉬는 자세가 번갈아 나오는 첫 화면', '시간·거리 전환, 잠깐 움직이기와 다시 눕기', '길게 눌러 종료하고 사진으로 완주 카드 남기기'],
+    features: ['7가지 쉬는 자세가 번갈아 나오는 첫 화면', '지표 탭 전환과 서로 다른 진행·일시정지 화면', '길게 종료 → 기록 요약 → 공유 카드 편집'],
     note: '타이머와 기록을 체험하는 웹 시안입니다. 실제 달리기나 GPS 거리를 측정하는 앱은 아니에요.', updated: '2026-10-30'
   },
   {
