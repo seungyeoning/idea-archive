@@ -49,17 +49,30 @@
     const today=new Date(),dayStart=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime(),dayEnd=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1).getTime();
     const todayRecords=data.records.filter(r=>!r.demo&&r.finishedAt>=dayStart&&r.finishedAt<dayEnd);
     const todayRest=todayRecords.reduce((sum,r)=>sum+r.elapsedMs,0);
-    return `<section class="app-screen home lobby-home apple-home">
-      <header class="app-header"><span class="apple-wordmark">눕런</span><button class="apple-settings" data-action="settings" aria-label="설정">설정</button></header>
-      <div class="apple-intro"><h2 class="home-headline">잠깐,<br>누워볼까요.</h2><p>쉬는 시간도 나의 기록으로.</p></div>
-      <div class="apple-rest" aria-hidden="true">${sofa}</div>
-      <div class="apple-duration"><div class="section-label"><span>쉬는 시간</span></div><div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}">${goalText(n)}</button>`).join('')}</div></div>
-      <button class="lobby-today" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="lobby-today-label">오늘의 기록</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count"><b>${todayRecords.length}</b>회</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></button>
-      ${warning()}
-      <div class="start-control"><button class="primary apple-start" data-action="start"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 6 16.5Z"/></svg><span>빈둥 시작</span></button></div>
-      <nav class="app-bottom-nav apple-tabbar" aria-label="앱 메뉴"><button data-action="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M3 11a2 2 0 0 1 2 2v3h14v-3a2 2 0 0 1 4 0v6H1v-6a2 2 0 0 1 2-2Zm1 8v2m16-2v2"/></svg><span>빈둥</span></button><button data-action="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V12m7 7V5m7 14V9"/></svg><span>나의 기록</span></button></nav>
+    const homeIcon='<path d="m3 10 9-7 9 7v10H3Zm6 10v-7h6v7"/>';
+    const chartIcon='<path d="M5 20V12m7 8V4m7 16V8"/>';
+    const gearIcon='<path d="m10 3 .5-1h3l.5 3 2 1 2.5-1 1.5 2.6-2 2V13l2 2-1.5 2.6-2.5-1-2 1-.5 3h-3l-.5-3-2-1-2.5 1L3 15l2-2V10L3 8l1.5-2.6L7 6l2-1Z"/><circle cx="11.5" cy="11.5" r="3"/>';
+    return `<section class="app-screen home lobby-home club-home">
+      <header class="club-header"><h2>빈둥</h2><span class="club-wordmark">NOOP<br>RUN CLUB</span></header>
+      <nav class="club-mode-tabs" aria-label="빈둥 메뉴"><button data-action="home" aria-current="page">바로 시작</button><button data-action="history">나의 기록</button></nav>
+      <div class="club-stage">
+        <svg class="club-map" viewBox="0 0 375 530" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="375" height="530" fill="#f1f2ee"/><g fill="#e6e8e3"><path d="M0 42h91v77H0Zm108-40h94v117h-94Zm111 0h80v119h-80Zm98 4h58v116h-58ZM0 138h93v92H0Zm110 0h92v92h-92Zm108 0h89v92h-89Zm108 0h49v92h-49ZM0 250h91v100H0Zm110 0h92v100h-92Zm109 0h86v100h-86Zm107 0h49v100h-49ZM0 370h91v160H0Zm109 0h94v160h-94Zm111 0h90v160h-90Zm109 0h46v160h-46Z"/></g><path d="m-30 410 198-75 250-44" stroke="#fff" stroke-width="21" fill="none"/><path d="m-25 410 198-75 250-44" stroke="#e1e4dd" stroke-width="2" fill="none"/><path d="M-20 152q67 10 101 4t40 36l-22 27H-20Z" fill="#e0e9d9"/><path d="M293 366h82v115h-82z" fill="#e0e9d9"/><g stroke="#daddd6" stroke-width="1" fill="none"><path d="M18 57h55v43H18Zm110-30h54v73h-54Zm109 3h43v70h-43ZM130 156h51v54h-51Zm107 0h51v54h-51ZM16 271h57v55H16Zm116 0h48v55h-48Zm104 0h51v40h-51ZM19 391h52v77H19Zm112-9h50v91h-50Zm104 8h51v99h-51"/></g></svg>
+        <button class="lobby-today club-summary" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="club-summary-copy"><span class="lobby-today-label">오늘의 빈둥</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count">완주 <b>${todayRecords.length}</b>회</span></span>${sofa}<span class="club-summary-chevron" aria-hidden="true">›</span></button>
+        <div class="club-goal-readout"><span class="club-goal-label">${data.goal?'목표 시간':'자유 빈둥'}</span><strong>${data.goal?formatTime(data.goal*1000):'0.00'}</strong><span class="club-goal-unit">${data.goal?'분 : 초':'km'}</span></div>
+        <div class="club-location" aria-label="실제 위치를 사용하지 않는 시안 지도"><span class="club-position" aria-hidden="true"></span><span>아무 데도 안 갈 예정</span></div>
+        ${warning()}
+        <div class="club-launch">
+          <button class="club-side-control" data-action="settings" aria-label="설정"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg></button>
+          <button class="club-start" data-action="start" aria-label="빈둥 시작">시작</button>
+          <button class="club-side-control club-sound" data-action="sound" aria-label="시작 음성 ${data.sound?'끄기':'켜기'}" aria-pressed="${!!data.sound}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon('sound')}${data.sound?'':'<path d="M3 3 21 21"/>'}</svg></button>
+        </div>
+        <button class="club-goal-trigger" data-action="goals" aria-haspopup="dialog">목표 설정 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button>
+        <span class="club-map-caption">시안 지도 · 위치를 수집하지 않아요</span>
+      </div>
+      <nav class="app-bottom-nav club-tabbar" aria-label="앱 메뉴"><button data-action="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true">${homeIcon}</svg><span>빈둥</span></button><button data-action="history"><svg viewBox="0 0 24 24" aria-hidden="true">${chartIcon}</svg><span>활동</span></button><button data-action="settings"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg><span>설정</span></button></nav>
     </section>`;
   }
+
   function counting() {
     return `<section class="app-screen"><header class="app-header">${brand}${iconButton('close','cancel-countdown','시작 취소')}</header><div class="countdown-wrap"><p>가장 편한 자세로.<br>이제, 아무것도 하지 마세요.</p><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">아직 준비 중이에요</button></section>`;
   }
@@ -130,13 +143,20 @@
   }
   function showDemo(which) {
     if(data.active){toast('진행 중인 빈둥 기록을 먼저 마쳐 주세요. 기록은 그대로 유지돼요.');go('running');return;}
-    clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;demoClockMs=null;
+    closeModal();clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;demoClockMs=null;
     if(which==='home')view='home';
     if(which==='running'){demoSession={id:'demo-active',status:'running',baseMs:18*60000+42000,runSince:Date.now(),goal:1800,demo:true};view='running';}
     if(which==='complete'){result={id:'demo-result',elapsedMs:1800000,finishedAt:Date.now(),goal:1800,mood:'',demo:true};view='complete';}
     render(true);
   }
-  function closeModal() {$('#modal')?.remove();modalAction=null;focusBeforeModal?.focus({preventScroll:true});}
+  function closeModal() {$('#modal')?.remove();$('#app').inert=false;modalAction=null;focusBeforeModal?.focus({preventScroll:true});}
+  function chooseGoal() {
+    if (view!=='home'||$('#modal')) return;
+    focusBeforeModal=document.activeElement;
+    const box=document.createElement('div');box.id='modal';box.className='modal-backdrop';box.dataset.kind='goals';
+    box.innerHTML=`<section class="modal club-goal-sheet" role="dialog" aria-modal="true" aria-labelledby="goal-title"><header><h2 id="goal-title">목표 설정</h2>${iconButton('close','close-goals','목표 설정 닫기')}</header><p>오늘은 얼마나 누워 있을까요?</p><div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}"><span>${goalText(n)}</span><small>${n?'시간 목표':'시간 제한 없이'}</small><span class="goal-check" aria-hidden="true">${data.goal===n?'✓':''}</span></button>`).join('')}</div></section>`;
+    $('#phone').append(box);$('#app').inert=true;box.querySelector('[aria-pressed="true"]').focus({preventScroll:true});
+  }
   function confirmFinish() {
     const s=active();if(!s)return;
     if(s.goal&&elapsed(s)<s.goal*1000){
@@ -184,18 +204,21 @@
     $('#note-content').innerHTML=content[name]+'<a class="note-link" href="../../#nooprun">아카이브에서 기획 보기 ↗</a>';
   }
   document.addEventListener('click',async e=>{
+    if(e.target.id==='modal'&&e.target.dataset.kind==='goals'){closeModal();return;}
     const b=e.target.closest('button');if(!b)return;
     if(b.dataset.note){note(b.dataset.note);return;}
     if(b.dataset.demo){showDemo(b.dataset.demo);return;}
-    if(b.dataset.goal!==undefined){data.goal=Number(b.dataset.goal);persist();render();$('[data-goal="'+data.goal+'"]')?.focus({preventScroll:true});return;}
+    if(b.dataset.goal!==undefined){data.goal=Number(b.dataset.goal);persist();closeModal();render();$('[data-action=goals]')?.focus({preventScroll:true});return;}
     if(b.dataset.record){result=data.records.find(r=>r.id===b.dataset.record);clearPhoto();view='complete';render(true);return;}
     if(b.dataset.mood){if(!result)return;result.mood=b.dataset.mood;const r=data.records.find(r=>r.id===result.id);if(r){r.mood=result.mood;persist();}render();return;}
     const action=b.dataset.action;
     if(['home','history','settings'].includes(action)){go(action);return;}
+    if(action==='goals'){chooseGoal();return;}
+    if(action==='close-goals'){closeModal();return;}
     if(action==='start'){beginCountdown();return;}
     if(action==='cancel-countdown'){cancelCountdown();return;}
     if(action==='effects'){window.NooprunSFX?.toggle();render();return;}
-    if(action==='sound'){data.sound=!data.sound;persist();if(!data.sound)window.speechSynthesis?.cancel();render();return;}
+    if(action==='sound'){data.sound=!data.sound;persist();if(!data.sound)window.speechSynthesis?.cancel();render();$('[data-action=sound]')?.focus({preventScroll:true});return;}
     if(action==='pause'){pause();return;}
     if(action==='finish'){confirmFinish();return;}
     if(action==='keep-resting'){closeModal();return;}
@@ -224,7 +247,7 @@
     if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid demo time');
     if (data.active) return {ok:false,reason:'real-session-active'};
     clearInterval(countdownTimer);countdownTimer=null;
-    $('#modal')?.remove();modalAction=null;
+    $('#modal')?.remove();$('#app').inert=false;modalAction=null;
     if (scene !== 'complete' && view !== scene) clearPhoto();
     if (scene === 'home') {demoSession=null;demoClockMs=null;result=null;view='home';}
     if (scene === 'countdown') {demoSession=null;demoClockMs=null;countdown=Math.max(1,Math.min(3,Math.round(count)));view='countdown';}

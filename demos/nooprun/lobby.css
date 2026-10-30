@@ -1,41 +1,63 @@
-/* Quiet typography, one accent, familiar controls. The original character is kept. */
-.phone[data-view=home]{background:#fff;color:#1d1d1f;border-color:#e5e5e7}
-.phone[data-view=home] .home-indicator{background:#1d1d1f}
-.apple-home{--apple-blue:#0066cc;--apple-secondary:#636368;--apple-line:#e5e5ea;padding:12px 24px 20px;background:#fff;font-family:var(--sans);color:#1d1d1f}
-.apple-home .app-header{min-height:44px;flex-shrink:0;align-items:center}
-.apple-wordmark{font-size:1.375rem;font-weight:700;line-height:1.2;letter-spacing:-.035em}
-.apple-settings{min-width:44px;min-height:44px;padding:8px 0 8px 12px;font-size:.875rem;font-weight:500;color:var(--apple-blue);border-radius:10px}
-.apple-intro{margin-top:28px;flex-shrink:0}
-.apple-home .home-headline{margin:0;font:700 2.125rem/1.18 var(--sans);letter-spacing:-.045em;color:#1d1d1f}
-.apple-intro p{margin:12px 0 0;font-size:.875rem;line-height:1.5;letter-spacing:-.01em;color:var(--apple-secondary)}
-.apple-rest{display:flex;align-items:center;justify-content:center;min-height:118px;margin:18px 0 16px;flex-shrink:0}
-.apple-rest .sofa-scene{width:260px;height:106px;margin:0}
-.apple-rest .sofa-scene svg{stroke:#5a6260;stroke-width:1.9}
-.apple-rest .sofa-caption{display:none}
-.apple-duration{flex-shrink:0}
-.apple-home .section-label{margin:0 0 10px;font-size:.8125rem;line-height:1.4;letter-spacing:0;color:var(--apple-secondary)}
-.apple-home .goal-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;background:#f2f2f7;padding:4px;border-radius:14px}
-.apple-home .goal-options button{min-width:44px;min-height:44px;border:0;border-radius:10px;background:transparent;color:#5b5b60;font-size:.875rem;font-weight:500;transition:background-color 120ms,color 120ms,transform 100ms}
-.apple-home .goal-options button[aria-pressed=true]{background:#fff;color:#1d1d1f;font-weight:600;box-shadow:0 1px 4px #00000012}
-.apple-home .goal-options button:active{background:#e5e5ea;transform:scale(.97)}
-.apple-home .lobby-today{display:flex;align-items:center;gap:9px;width:100%;min-height:56px;margin-top:23px;padding:10px 0;border-top:1px solid var(--apple-line);border-bottom:1px solid var(--apple-line);text-align:left;flex-shrink:0}
-.lobby-today-label{font-size:.8125rem;color:var(--apple-secondary);white-space:nowrap;margin-right:auto}
-.apple-home .lobby-today strong{font:600 1.0625rem/1.3 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:#1d1d1f}
-.lobby-today-count{font-size:.8125rem;color:var(--apple-secondary);white-space:nowrap}
+/* Running-club start screen. All map shapes are decorative, with no GPS request. */
+.phone[data-view=home]{background:#fff;color:#111;border-color:#dededb}
+.phone[data-view=home] .home-indicator{background:#111}
+.club-home{padding:8px 0 18px;background:#fff;color:#111;font-family:var(--sans);--club-yellow:#e4ff3b;--club-muted:#666;--club-line:#e9e9e9}
+.club-header{display:flex;align-items:center;justify-content:space-between;min-height:53px;padding:0 25px;flex-shrink:0}
+.club-header h2{font-size:2rem;line-height:1.1;font-weight:800;letter-spacing:-.065em}
+.club-wordmark{font:700 .65rem/1.05 var(--sans);letter-spacing:-.03em;text-align:right}
+.club-mode-tabs{display:flex;gap:29px;padding:0 25px;margin-top:13px;flex-shrink:0;border-bottom:1px solid var(--club-line)}
+.club-mode-tabs button{padding:0 0 12px;min-height:45px;min-width:68px;font-size:.9375rem;font-weight:500;color:#777;position:relative}
+.club-mode-tabs [aria-current=page]{color:#111;font-weight:700}
+.club-mode-tabs [aria-current=page]:after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#111}
+.club-stage{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;flex:1;min-height:0;overflow:hidden;padding:21px 25px 10px}
+.club-map{position:absolute;inset:0;width:100%;height:100%;z-index:-2;opacity:.62;pointer-events:none}
+.club-stage:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#fff 1%,#ffffffa8 24%,#ffffff45 48%,#ffffffb8 75%,#fff 100%)}
+.club-summary{display:flex;align-items:center;width:100%;min-height:91px;padding:12px 14px;background:#fff;border:1px solid #e8e8e5;border-radius:2px;text-align:left;flex-shrink:0;position:relative}
+.club-summary-copy{display:grid;grid-template-columns:auto auto;gap:3px 10px;align-items:baseline;flex-shrink:0}
+.club-summary .lobby-today-label{grid-column:1/-1;color:#555;font-size:.6875rem;font-weight:500}
+.club-summary strong{font:750 1.375rem/1.25 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.06em}
+.lobby-today-count{font-size:.625rem;color:#777}
 .lobby-today-count b{font-weight:400}
-.apple-home .lobby-today>svg{width:14px;height:14px;fill:none;stroke:#8e8e93;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-left:2px}
-.apple-home .start-control{margin-top:auto;padding-top:30px;flex-shrink:0}
-.apple-home .apple-start{min-height:56px;justify-content:center;gap:8px;padding:14px 20px;border:0;border-radius:17px;background:var(--apple-blue);color:#fff;font-size:1.0625rem;font-weight:600;letter-spacing:-.015em;transition:transform 100ms,background-color 100ms;box-shadow:none}
-.apple-start>svg{width:17px;height:17px;fill:currentColor;stroke:none}
-.apple-home .apple-start:hover{background:#005fbd}
-.apple-home .apple-start:active{background:#0057b0;transform:scale(.98)}
-.apple-home .apple-tabbar{border-top:0;margin-top:22px;padding-top:0;display:flex;justify-content:space-around;gap:20px;flex-shrink:0}
-.apple-home .apple-tabbar button{min-width:64px;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:5px 12px;border-radius:12px;color:#76767c;font-size:.6875rem;font-weight:500;line-height:1.2}
-.apple-tabbar svg{height:21px;width:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.apple-home .apple-tabbar button[aria-current=page]{color:var(--apple-blue);font-weight:600}
-.apple-home .apple-tabbar button:active,.apple-home .apple-settings:active{background:#f2f2f7}
-.apple-home button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.apple-home button:focus-visible{outline:3px solid var(--apple-blue);outline-offset:3px}
-.apple-home .storage-warning{font-size:.8125rem;flex-shrink:0}
-@media(prefers-reduced-motion:reduce){.apple-home *{animation:none!important;transition:none!important}}
-@media(prefers-contrast:more){.apple-home{--apple-secondary:#3f3f44;--apple-line:#8e8e93}.apple-home .goal-options{border:1px solid #8e8e93}.apple-home .goal-options button[aria-pressed=true]{outline:1px solid #3f3f44;outline-offset:-1px}}
+.club-summary .sofa-scene{width:125px;height:60px;margin:0 0 0 auto;flex-shrink:0}
+.club-summary .sofa-scene svg{stroke:#747b72;stroke-width:2}
+.club-summary .sofa-caption{display:none}
+.club-summary-chevron{font-size:24px;color:#999;font-weight:300;margin-left:6px}
+.club-goal-readout{display:flex;flex-direction:column;align-items:center;margin-top:28px;flex-shrink:0}
+.club-goal-label{font-size:.75rem;color:#555}
+.club-goal-readout strong{font:800 4.75rem/.98 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.085em;margin:6px 0 4px;padding-right:.06em}
+.club-goal-unit{font-size:.6875rem;color:#6d6d6d}
+.club-location{display:flex;align-items:center;gap:7px;justify-content:center;margin:18px 0 0;font-size:.625rem;color:#757575;flex-shrink:0}
+.club-position{height:8px;width:8px;border-radius:50%;background:#4179c6;outline:4px solid #4179c61a;border:1px solid #fff}
+.club-launch{display:flex;width:100%;justify-content:center;gap:28px;align-items:center;margin-top:auto;padding-top:21px;flex-shrink:0}
+.club-start{width:118px;height:118px;min-height:118px;flex-shrink:0;background:var(--club-yellow);border-radius:50%;color:#0c0c0c;font-size:1.5rem;font-weight:800;letter-spacing:-.045em;transition:transform 100ms,background-color 100ms}
+.club-start:hover{background:#daef34}
+.club-start:active{transform:scale(.95);background:#d1e82d}
+.club-side-control{height:46px;width:46px;border-radius:50%;background:#fff;border:1px solid #d9dcd6;display:grid;place-items:center;padding:10px;flex-shrink:0;transition:transform 100ms}
+.club-side-control svg{height:23px;width:23px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.club-side-control:active{transform:scale(.94);background:#ebedE7}
+.club-sound[aria-pressed=false]{color:#888}
+.club-goal-trigger{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;min-width:100px;font-size:.8125rem;margin-top:6px;font-weight:600}
+.club-goal-trigger svg{height:14px;width:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.club-map-caption{font-size:.5625rem;line-height:1.5;color:#777;margin-top:2px}
+.club-home .club-tabbar{margin:0;padding:10px 22px 0;gap:0;justify-content:space-between;border-top:1px solid var(--club-line);background:#fff;flex-shrink:0}
+.club-tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:68px;min-height:51px;font-size:.625rem;font-weight:500;color:#777;padding:4px 10px}
+.club-tabbar button[aria-current=page]{color:#111;font-weight:700}
+.club-tabbar svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.club-tabbar [aria-current=page] svg{fill:#111;stroke:#111}
+.club-tabbar button:active,.club-mode-tabs button:active{opacity:.55}
+.club-home button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.club-home button:focus-visible,.club-goal-sheet button:focus-visible{outline:3px solid #2b65b1;outline-offset:3px}
+.club-home .storage-warning{font-size:.6875rem;flex-shrink:0;margin:8px 0 0}
+.club-goal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:24px 25px 31px}
+.club-goal-sheet header{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.club-goal-sheet h2{font-size:1.375rem;letter-spacing:-.04em}
+.club-goal-sheet .icon-button{border:0;background:#f2f2f2}
+.club-goal-sheet p{font-size:.8125rem;margin:7px 0 19px}
+.club-goal-sheet .goal-options{display:flex;flex-direction:column;gap:0}
+.club-goal-sheet .goal-options button{display:flex;align-items:center;gap:12px;min-height:64px;padding:12px 13px;border:0;border-top:1px solid #e9e9e9;border-radius:0;background:#fff;color:#111;text-align:left;font-size:1rem;font-weight:600}
+.club-goal-sheet .goal-options button small{font-size:.6875rem;font-weight:400;color:#777}
+.club-goal-sheet .goal-options button[aria-pressed=true]{background:#f3f6e9;color:#111;border-color:#e9e9e9}
+.goal-check{margin-left:auto;font-size:1.125rem}
+.club-goal-sheet .goal-options button:active{background:#e8edda}
+@media(prefers-reduced-motion:reduce){.club-home *{animation:none!important;transition:none!important}}
+@media(prefers-contrast:more){.club-home{--club-muted:#333;--club-line:#888}.club-goal-label,.club-goal-unit,.club-map-caption,.club-location,.lobby-today-count{color:#444}.club-summary{border-color:#888}.club-side-control{border-color:#666}}
