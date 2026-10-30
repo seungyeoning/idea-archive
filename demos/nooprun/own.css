@@ -112,3 +112,4 @@
 .phone .gps-retry{background:#fff;color:#333;border-color:#ddd}.gps-detail{font-size:11px;line-height:1.5;color:#666;margin:6px 0 0}.gps-detail[hidden],.gps-help[hidden]{display:none!important}
 .club-home .own-map-status{color:#444}.club-home .own-home-location-status [data-gps-status]{font-size:12px;font-weight:600}.club-home .own-map-status [data-status=unavailable],.club-home .own-map-status [data-status=timeout]{color:#90542b}
 .location-help-steps{font-size:13px;line-height:1.8;padding-left:20px;color:#666}.location-help-steps li+li{margin-top:8px}.app-link-copy{overflow-wrap:anywhere;user-select:all}
+.own-session[data-paused=true] .own-session-copy{color:#111;font-size:14px;line-height:1.8;font-weight:600}.own-session-copy>span{color:#777;font-size:11px;font-weight:400}

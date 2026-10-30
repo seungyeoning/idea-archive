@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="archive-return.css">
   <link rel="stylesheet" href="nrc.css?v=nrc-mirror-1">
   <link rel="stylesheet" href="vendor/leaflet.css">
-  <link rel="stylesheet" href="own.css?v=unified-2">
+  <link rel="stylesheet" href="own.css?v=room-pause-1">
 </head>
 <body>
   <a class="archive-return" href="../../#nooprun">← 아이디어 아카이브</a>
@@ -26,13 +26,14 @@
     <section class="intro">
       <p class="eyebrow">눕런 · 인터랙티브 기획 시안</p>
       <h1>오늘도,<br> 가만히 완주.</h1>
-      <p class="intro-copy">집에서 얼마나 뒹굴거렸을까.<br> 누워 있는 시간을 기록하고,<br> 밖으로 나가면 마쳐요.</p>
+      <p class="intro-copy">내 방에서 얼마나 뒹굴거렸을까.<br> 화장실이나 거실에 다녀올 땐,<br> 눕기도 잠깐 일시정지.</p>
       <div class="manifesto"><span>STAY A LITTLE</span><strong>LONGER.</strong></div>
       <p class="prototype-note">계획 중인 앱의 HTML 시안이에요.<br>기기의 현재 위치가 확인되면 집콕 기록을 체험할 수 있어요.</p>
       <div class="demo-tools" aria-label="시안 장면">
         <button data-demo="home">시작 화면</button>
         <button data-demo="countdown">시작 문구 보기</button>
         <button data-demo="running">눕기 시연</button>
+        <button data-demo="room-exit">방 나가기 시연</button>
         <button data-demo="complete">30분 기록 예시</button>
       </div>
     </section>
@@ -43,7 +44,7 @@
         <div id="app"></div>
         <div class="home-indicator" aria-hidden="true"></div>
       </div>
-      <p class="preview-caption">열자마자 우리 집 지도 · 눕기로 기록 시작<br>웹 시안은 화면을 켜 둔 동안 위치 확인</p>
+      <p class="preview-caption">내 방에서 눕기 · 잠깐 이동은 일시정지<br>방 이동 자동 감지는 기획 중 · 웹에서는 버튼으로 체험</p>
     </section>
 
     <section class="notebook" aria-label="눕런 상세 기획">
@@ -59,10 +60,10 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="audio.js?v=home-gps-1"></script>
   <script src="art.js?v=home-gps-1"></script>
-  <script src="voice.js?v=home-gps-1"></script>
-  <script src="location.js?v=unified-2"></script>
+  <script src="voice.js?v=room-pause-1"></script>
+  <script src="location.js?v=room-pause-1"></script>
   <script src="vendor/leaflet.js"></script>
-  <script src="home-map.js?v=unified-2"></script>
-  <script src="app.js?v=unified-2"></script>
+  <script src="home-map.js?v=room-pause-1"></script>
+  <script src="app.js?v=room-pause-1"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const base = new URL('assets/voice/', document.currentScript.src);
-  const files = {start:'coach-start.mp3', pause:'coach-pause.mp3', resume:'coach-resume.mp3', complete:'coach-complete.mp3'};
+  const files = {start:'coach-start.mp3', pause:'coach-pause.mp3?v=room-pause-1', resume:'coach-resume.mp3', complete:'coach-complete.mp3'};
   let enabled = false, context, voice = null, epoch = 0, lastPlayed = null, playCount = 0;
   const decoded = new Map(), pending = new Map();
   // Preload files silently. Open the audio device only after a user gesture.
