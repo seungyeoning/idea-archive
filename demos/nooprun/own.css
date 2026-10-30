@@ -56,3 +56,4 @@
 .own-home-marker .own-pin-house svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .own-pin-label{margin-top:7px;background:#faf9f4;border:1px solid #dbe2cd;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:650;line-height:1.5;white-space:nowrap;color:#37472b}
 .own-home-map-scene+.own-today{margin-top:12px;padding:15px 0}.own-start-area .primary:disabled{opacity:.55;cursor:wait}
+@media(max-width:600px){.archive-return{position:static;display:table;width:max-content;margin:12px 12px 0;box-shadow:none}}
