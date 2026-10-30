@@ -49,11 +49,11 @@ window.ARCHIVE_ITEMS = [
   },
   {
     id: 'teru', title: '테루테루보즈', category: 'app',
-    tagline: '내일은 맑기를, 같은 곳에서 바라는 마음.',
-    summary: '소풍 갈 공원, 좋아하는 축제, 내일의 약속 장소. 그곳이 맑기를 바라는 사람들이 지도에 작은 테루테루보즈를 하나씩 걸어 두는 공동 기원 지도를 구상했어요.',
-    status: '기획', theme: '#e4eff5', cover: 'assets/teru.svg', demo: null, video: null,
-    features: ['내일 맑기를 바라는 장소 선택하기', '작은 인형에 짧은 바람 남기기', '같은 장소를 기다리는 마음들 모아 보기'],
-    note: '기획 단계입니다. 실제 날씨를 바꾸는 기능이 아니라, 같은 장소를 기대하는 마음을 표현하는 아이디어예요.', updated: '2026-10-30'
+    tagline: '우리 동네는 오늘, 몇 명이 맑음을 빌었을까.',
+    summary: '맑았으면 하는 장소와 반경을 정해 기도 구역을 만들어요. 하루 한 번 테루테루보즈를 걸면 참여 인원이 쌓이고, 만든 구역과 지역구의 오늘 순위를 볼 수 있어요.',
+    status: '조작 시안', theme: '#f8f7f1', cover: 'assets/teru-leaderboard.png', demo: 'demos/teru/', video: null,
+    features: ['지역 선택 → 반경 0.5~5km → 구역 생성', '하루 한 구역, 한 사람 한 번의 기도', '만든 구역 순위와 지역구 합산 순위'],
+    note: '순위는 예시 인원이며 내 참여와 구역은 이 브라우저에만 저장돼요. 시안에서는 9개 예시 장소를 선택할 수 있어요. 실제 사용자·GPS·예보·계정은 미연동이에요.', updated: '2026-10-30'
   },
   {
     id: 'next-photo', title: '다음장', category: 'app',
