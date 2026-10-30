@@ -41,11 +41,11 @@ window.ARCHIVE_ITEMS = [
   },
   {
     id: 'nooprun', title: '눕런', category: 'app',
-    tagline: '아무것도 안 한 시간도, 나의 기록.',
-    summary: '내가 몇 분이나 누워 뒹굴거렸는지 궁금해서 생각한 앱이에요. 누운 시간을 재고, 러닝 완주처럼 0.00km 기록 카드로 남겨요.',
-    status: '조작 시안', theme: '#f5f5f7', cover: 'assets/nooprun-poses.png', demo: 'demos/nooprun/', video: 'assets/nooprun.mp4',
-    features: ['7가지 쉬는 자세가 번갈아 나오는 첫 화면', '지표 탭 전환과 서로 다른 진행·일시정지 화면', '길게 종료 → 기록 요약 → 공유 카드 편집'],
-    note: '타이머와 기록을 체험하는 웹 시안입니다. 실제 달리기나 GPS 거리를 측정하는 앱은 아니에요.', updated: '2026-10-30'
+    tagline: '오늘의 코스는, 집.',
+    summary: '집에서 얼마나 뒹굴거렸는지 러닝처럼 기록하는 집순이·집돌이용 앱. 집에서 시작하고, GPS로 집 밖임이 확인되면 자동으로 완주해요.',
+    status: '조작 시안', theme: '#f5f5f7', cover: 'assets/nooprun-poses.png', demo: 'demos/nooprun/?v=home-gps-1', video: 'assets/nooprun.mp4',
+    features: ['집 위치·반경 설정 → 집콕 시작', 'GPS 오차를 고려한 외출 자동 종료', '스포츠 앱 패러디 · 사진으로 집콕 인증'],
+    note: '위치 권한을 허용하면 화면이 켜진 동안 외출을 감지해요. 집 위치는 브라우저에만 보관해요. 잠금·백그라운드 감지는 모바일 앱에서 별도 구현이 필요해요. 소개 영상은 이전 시안입니다.', updated: '2026-10-30'
   },
   {
     id: 'teru', title: '테루테루보즈', category: 'app',

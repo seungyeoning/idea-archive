@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>눕런 — 오늘도, 가만히 완주.</title>
-  <link rel="icon" type="image/png" href="assets/brand/nooprun-recline.png?v=stretch-2">
-  <link rel="apple-touch-icon" href="assets/brand/nooprun-recline.png?v=stretch-2">
+  <link rel="icon" type="image/png" href="assets/brand/nooprun-recline.png?v=home-gps-1">
+  <link rel="apple-touch-icon" href="assets/brand/nooprun-recline.png?v=home-gps-1">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="lobby.css?v=stretch-2">
-  <link rel="stylesheet" href="session.css?v=stretch-2">
-  <link rel="stylesheet" href="archive-return.css">
+  <link rel="stylesheet" href="lobby.css?v=home-gps-1">
+  <link rel="stylesheet" href="session.css?v=home-gps-1">
+  <link rel="stylesheet" href="location.css?v=home-gps-1">
+  <link rel="stylesheet" href="../../archive-return.css">
 </head>
 <body>
-  <a class="archive-return" href="../../" aria-label="이 어플 어때? 아카이브로 돌아가기">← 아카이브</a>
+  <a class="archive-return" href="../../#nooprun">← 아이디어 아카이브</a>
   <header class="masthead">
     <a href="../../" class="studio-link">작은 생각들 <span>↖ 아이디어 노트</span></a>
     <span class="edition">05 / NOOP RUN CLUB</span>
@@ -22,12 +23,12 @@
     <section class="intro">
       <p class="eyebrow">눕런 · 인터랙티브 기획 시안</p>
       <h1>오늘도,<br> 가만히 완주.</h1>
-      <p class="intro-copy">누워서 쉰 시간을 러닝 기록처럼.<br> 아무 데도 가지 않았지만,<br> 오늘의 완주 기록은 남았으니까.</p>
+      <p class="intro-copy">집에서 뒹굴거린 시간을 러닝 기록처럼.<br> 오늘의 코스는 집.<br> 밖으로 나가면 자동으로 완주.</p>
       <div class="manifesto"><span>THE ONLY PACE</span><strong>YOUR OWN.</strong></div>
-      <p class="prototype-note">계획 중인 앱의 HTML 시안이에요.<br>이 브라우저에서 타이머와 기록을 체험할 수 있어요.</p>
+      <p class="prototype-note">계획 중인 앱의 HTML 시안이에요.<br>위치 권한을 허용하면 집콕 기록을 체험할 수 있어요.</p>
       <div class="demo-tools" aria-label="시안 장면">
         <button data-demo="home">시작 화면</button>
-        <button data-demo="running">빈둥 중</button>
+        <button data-demo="running">집콕 시연</button>
         <button data-demo="complete">30분 완주 예시</button>
       </div>
     </section>
@@ -38,7 +39,7 @@
         <div id="app"></div>
         <div class="home-indicator" aria-hidden="true"></div>
       </div>
-      <p class="preview-caption">실제 운동량을 측정하지 않는 빈둥 기록 · 시연 기록은 따로 표시</p>
+      <p class="preview-caption">웹 화면을 켜 둔 동안 위치 확인 · 지도 그림은 예시</p>
     </section>
 
     <section class="notebook" aria-label="눕런 상세 기획">
@@ -52,9 +53,10 @@
   </main>
   <footer class="footer"><span>NOOPRUN / 기획 및 화면 시안</span><a href="../../#nooprun">상세 기획 보기 ↗</a><span>2026.10.30</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="audio.js?v=stretch-2"></script>
-  <script src="art.js?v=stretch-2"></script>
-  <script src="voice.js?v=stretch-2"></script>
-  <script src="app.js?v=stretch-2"></script>
+  <script src="audio.js?v=home-gps-1"></script>
+  <script src="art.js?v=home-gps-1"></script>
+  <script src="voice.js?v=home-gps-1"></script>
+  <script src="location.js?v=home-gps-1"></script>
+  <script src="app.js?v=home-gps-1"></script>
 </body>
 </html>

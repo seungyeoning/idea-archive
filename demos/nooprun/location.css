@@ -1,0 +1,42 @@
+/* Home boundary setup uses the same restrained sports UI as the session. */
+.home-setup{background:#fff;color:#111;padding:8px 25px 30px}
+.phone[data-view=homeSetup],.phone[data-view=locating]{background:#fff;border-color:#dededb}
+.home-setup .app-header>span{font-size:10px;font-weight:700;letter-spacing:2px}
+.home-setup .app-header>span:last-child{width:44px}
+.home-setup h2{font:780 38px/1.15 var(--sans);letter-spacing:-2px;margin-top:24px}
+.home-setup-lede{font-size:13px;line-height:1.7;color:#646464;margin-top:14px}
+.home-zone-art{position:relative;display:grid;place-items:center;align-content:center;width:186px;height:186px;flex-shrink:0;align-self:center;margin:18px 0;background:#f7f8f3;border-radius:50%;gap:9px}
+.home-zone-ring{position:absolute;inset:13px;border-radius:50%;border:1px solid #a0ae67;box-shadow:0 0 0 12px #e4ff3b40}
+.home-zone-art svg{width:45px;height:45px;fill:none;stroke:#111;stroke-width:2.5;stroke-linejoin:round}
+.home-zone-art>span{font-size:10px;letter-spacing:2px;font-weight:700}
+.home-radius{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.home-radius button{border:1px solid #ddd;border-radius:30px;font-size:13px;font-weight:650;min-height:44px}
+.home-radius button[aria-pressed=true]{background:#111;color:#fff;border-color:#111}
+.home-setup-help{font-size:11px;color:#6b6b6b;line-height:1.65;text-align:center;margin:13px 0}
+.gps-info{display:flex;flex-direction:column;gap:5px;text-align:center;margin:8px 0 17px;min-height:38px}
+.gps-info strong{font-size:13px;font-weight:650;line-height:1.4}
+.gps-info span{font-size:11px;color:#777}
+[data-gps-status][data-status=outside],[data-gps-status][data-status=denied],[data-gps-status][data-status=weak]{color:#a43d16}
+.home-setup .primary{border-radius:30px;min-height:54px;background:#e4ff3b;color:#111;font-size:14px;justify-content:center;margin-top:auto}
+.home-setup .primary .arrow{display:none}
+.location-privacy{font-size:10px;color:#757575;line-height:1.6;text-align:center;margin-top:12px}
+.gps-retry{font-size:12px;text-decoration:underline;text-underline-offset:4px;align-self:center;margin-bottom:8px}
+.gps-retry[hidden]{display:none}
+.locating .home-zone-art{margin:36px 0 24px}
+.locating .location-privacy{margin-top:auto}
+.club-home-boundary{position:absolute;width:112px;height:112px;left:50%;top:50%;transform:translate(-50%,-50%);border:1px solid #89965d80;border-radius:50%;background:#e4ff3b18}
+.club-map-caption.home-location-link{pointer-events:auto;border:0;min-height:38px;background:none;font-size:10px;white-space:nowrap;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.session-gps{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:16px;font-size:11px;line-height:1.3}
+.session-gps small{font-size:9px;opacity:.7}
+.session-gps .gps-retry{min-height:28px;margin:0}
+.running .session-gps [data-gps-status]{font-weight:650}
+.exit-reason{font-size:12px;color:#555;line-height:1.6;margin-top:14px}
+.exit-reason:empty{display:none}
+.exit-reason small{font-size:10px;color:#8c5b2c}
+.card-distance-label{display:block;margin-top:7px;font-size:9px}
+.home-setting{font-size:12px;border-bottom:1px solid #aaa}
+.running[data-paused=false] .run-art{height:108px;width:166px}
+.running[data-paused=false] .metric-hero{min-height:182px}
+.running[data-paused=true] .pause-scene{min-height:185px}
+.running[data-paused=true] .paused-art{height:135px;width:200px}
+.running[data-paused=true] .session-gps{margin-top:12px}
