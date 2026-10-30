@@ -31,10 +31,11 @@
     catch { storageOK=false; toast('저장 공간을 사용할 수 없어 이번 기록은 이 창에서만 유지돼요.'); }
   }
   function toast(message) { $('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3400); }
-  function say(message) {
+  window.NooprunVoice?.setEnabled(data.sound);
+  async function say(cue) {
     if (!data.sound) return;
-    if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) {toast('음성 대신 화면 안내로 진행해요.');return;}
-    try {const u=new SpeechSynthesisUtterance(message);u.lang='ko-KR';u.rate=.95;u.volume=.8;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);} catch {toast('이 환경에서는 시작 음성을 재생할 수 없어요.');}
+    const status = await window.NooprunVoice?.play(cue);
+    if (data.sound && (!status || status === 'unavailable')) toast('음성을 불러오지 못했어요. 화면 안내로 계속 진행해요.');
   }
   const icon = name => ({back:'<path d="m13 5-7 7 7 7"/>',sound:'<path d="m4 9 4 0 5-4v14l-5-4H4Z"/><path d="M17 8q4 4 0 8"/>',share:'<path d="M12 15V3m-4 4 4-4 4 4M6 10H4v11h16V10h-2"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>'}[name]);
   const iconButton = (name,action,label) => `<button class="icon-button" data-action="${action}" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon(name)}</svg></button>`;
@@ -52,7 +53,7 @@
     const chartIcon='<path d="M5 20V12m7 8V4m7 16V8"/>';
     const gearIcon='<path d="m10 3 .5-1h3l.5 3 2 1 2.5-1 1.5 2.6-2 2V13l2 2-1.5 2.6-2.5-1-2 1-.5 3h-3l-.5-3-2-1-2.5 1L3 15l2-2V10L3 8l1.5-2.6L7 6l2-1Z"/><circle cx="11.5" cy="11.5" r="3"/>';
     return `<section class="app-screen home lobby-home club-home">
-      <header class="club-header"><h2>빈둥</h2><span class="club-wordmark">NOOP<br>RUN CLUB</span></header>
+      <header class="club-header"><h2>빈둥</h2><img class="club-app-icon" src="assets/brand/nooprun-recline.png" width="42" height="42" alt="눕런: 편하게 누운 사람"></header>
       <nav class="club-mode-tabs" aria-label="빈둥 메뉴"><button data-action="home" aria-current="page">바로 시작</button><button data-action="history">나의 기록</button></nav>
       <div class="club-stage">
         <svg class="club-map" viewBox="0 0 375 530" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="375" height="530" fill="#f1f2ee"/><g fill="#e6e8e3"><path d="M0 42h91v77H0Zm108-40h94v117h-94Zm111 0h80v119h-80Zm98 4h58v116h-58ZM0 138h93v92H0Zm110 0h92v92h-92Zm108 0h89v92h-89Zm108 0h49v92h-49ZM0 250h91v100H0Zm110 0h92v100h-92Zm109 0h86v100h-86Zm107 0h49v100h-49ZM0 370h91v160H0Zm109 0h94v160h-94Zm111 0h90v160h-90Zm109 0h46v160h-46Z"/></g><path d="m-30 410 198-75 250-44" stroke="#fff" stroke-width="21" fill="none"/><path d="m-25 410 198-75 250-44" stroke="#e1e4dd" stroke-width="2" fill="none"/><path d="M-20 152q67 10 101 4t40 36l-22 27H-20Z" fill="#e0e9d9"/><path d="M293 366h82v115h-82z" fill="#e0e9d9"/><g stroke="#daddd6" stroke-width="1" fill="none"><path d="M18 57h55v43H18Zm110-30h54v73h-54Zm109 3h43v70h-43ZM130 156h51v54h-51Zm107 0h51v54h-51ZM16 271h57v55H16Zm116 0h48v55h-48Zm104 0h51v40h-51ZM19 391h52v77H19Zm112-9h50v91h-50Zm104 8h51v99h-51"/></g></svg>
@@ -122,7 +123,7 @@
     return `<section class="app-screen history"><header class="app-header">${brand}${iconButton('back','home','빈둥 시작으로')}</header><h2>모든 쉼에는<br>기록이 있다.</h2><div class="history-total"><strong>${Math.floor(total/60000)} <small style="font:16px var(--sans)">분</small></strong><span>이 브라우저에서 남긴 ${records.length}번의 완주</span></div>${records.length?`<ul class="records">${records.slice().reverse().map(r=>`<li><button data-record="${esc(r.id)}"><span><strong>${formatTime(r.elapsedMs)}</strong><small>${dateLabel(r.finishedAt)} · 빈둥 기록</small></span><span class="record-detail">${esc(r.mood||'내 속도로 쉬었어요')}<br>0.00 km &nbsp; ↗</span></button></li>`).join('')}</ul>`:'<div class="empty-state">아직 비어 있는 기록장.<br>잠깐 누워 있는 것부터 시작해요.</div>'}${warning()}${primary('다시 빈둥 시작','home')}${nav('history')}</section>`;
   }
   function settings() {
-    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>그림 자동 전환</span><button class="switch" role="switch" aria-label="그림 자동 전환" aria-checked="${window.NooprunArt.state().enabled}" data-action="art">${window.NooprunArt.state().enabled?'켜짐':'꺼짐'}</button></div><p>7가지 쉬는 자세가 천천히 바뀌어요. 기기의 동작 줄이기가 켜져 있으면 그림은 그대로 멈춰 있어요.</p><div class="settings-row"><span>버튼 효과음</span><button class="switch" role="switch" aria-label="버튼 효과음" aria-checked="${!!window.NooprunSFX?.state().enabled}" data-action="effects">${window.NooprunSFX?.state().enabled?'켜짐':'꺼짐'}</button></div><p class="effects-description">선택할 때는 가볍게 톡, 완주할 때는 작은 축하 소리.<br>음성 안내와 따로 켜고 끌 수 있어요.</p><div class="settings-row"><span>시작·멈춤·완주 음성</span><button class="switch" role="switch" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>시작하면 “운동을 시작했습니다”라고 말해요. 이 시안에서는 기기의 한국어 읽기 음성을 사용해요. 브라우저와 음성 설치 상태에 따라 소리가 나지 않을 수 있어요.</p><p>타이머와 기록은 이 브라우저 안에 보관해요. 거리는 빈둥 기록을 위한 0.00km로 표시해요. GPS 위치와 실제 운동량은 측정하지 않아요. 로그인과 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 언제 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
+    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>그림 자동 전환</span><button class="switch" role="switch" aria-label="그림 자동 전환" aria-checked="${window.NooprunArt.state().enabled}" data-action="art">${window.NooprunArt.state().enabled?'켜짐':'꺼짐'}</button></div><p>7가지 쉬는 자세가 천천히 바뀌어요. 기기의 동작 줄이기가 켜져 있으면 그림은 그대로 멈춰 있어요.</p><div class="settings-row"><span>버튼 효과음</span><button class="switch" role="switch" aria-label="버튼 효과음" aria-checked="${!!window.NooprunSFX?.state().enabled}" data-action="effects">${window.NooprunSFX?.state().enabled?'켜짐':'꺼짐'}</button></div><p class="effects-description">선택할 때는 가볍게 톡, 완주할 때는 작은 축하 소리.<br>음성 안내와 따로 켜고 끌 수 있어요.</p><div class="settings-row"><span>음성 안내</span><button class="switch" role="switch" aria-label="음성 안내" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>차분한 한국어 목소리로 시작, 잠깐 움직이기, 다시 눕기, 완료를 안내해요.</p><button class="voice-preview" data-action="voice-preview" ${data.sound?'':'disabled'}>목소리 들어보기 <span aria-hidden="true">▷</span></button><p>타이머와 기록은 이 브라우저 안에 보관해요. 거리는 빈둥 기록을 위한 0.00km로 표시해요. GPS 위치와 실제 운동량은 측정하지 않아요. 로그인과 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 언제 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
   }
   function render(focus=false) {
     cancelHold();
@@ -152,20 +153,20 @@
       if(countdown>0){$('#countdown').textContent=countdown;return;}
       clearInterval(countdownTimer);countdownTimer=null;
       data.active={id:newID(),status:'running',baseMs:0,runSince:Date.now(),startedAt:Date.now(),goal:countdownGoal,demo:false};
-      persist();view='running';render(true);say('운동을 시작했습니다.');
+      persist();view='running';render(true);say('start');
     },1000);
   }
   function pause() {
     const s=active();if(!s)return;
-    if(s.status==='running'){s.baseMs=elapsed(s);s.runSince=null;s.status='paused';say('잠깐 움직이는 중입니다.');}
-    else{s.runSince=Date.now();s.status='running';say('다시 누워 볼까요.');}
+    if(s.status==='running'){s.baseMs=elapsed(s);s.runSince=null;s.status='paused';say('pause');}
+    else{s.runSince=Date.now();s.status='running';say('resume');}
     if(!s.demo)persist();render();$('[data-action=pause]')?.focus({preventScroll:true});
   }
   function finish({silent=false}={}) {
     const s=active();if(!s)return;
     result={id:s.id,elapsedMs:elapsed(s),finishedAt:Date.now(),goal:s.goal,mood:'',demo:!!s.demo};
     if(!s.demo){if(!data.records.some(r=>r.id===result.id))data.records.push({...result});data.active=null;persist();}
-    demoSession=null;demoClockMs=null;view='complete';clearPhoto();render(true);if(!silent){window.NooprunSFX?.play('complete');say('운동을 완료했습니다. 잘 쉬었습니다.');}
+    demoSession=null;demoClockMs=null;view='complete';clearPhoto();render(true);if(!silent){window.NooprunSFX?.play('complete');say('complete');}
   }
   function updateTimer() {
     const t=$('#timer');if(!t||!active())return;
@@ -268,7 +269,7 @@
       scope:`<p class="note-kicker">02 / FIRST VERSION</p><h2>한 번의 완주가<br>끝까지 이어지도록.</h2><h3>먼저 만들 것</h3><ul class="scope-list"><li>시작·멈춤·재개·완주 타이머와 음성</li><li>목표 시간 없이 자유롭게 기록</li><li>날짜별 기록과 누적 빈둥 시간</li><li>사진·기분을 넣은 완주 카드 저장</li><li>로그인 없이 시작하는 흐름</li></ul><h3>나중에 검토할 것</h3><ul class="scope-list"><li>캐릭터 자세, 기록 카드, 음성 팩</li><li>잠금 화면·다이나믹 아일랜드의 타이머</li><li>가격은 반응을 본 뒤 결정</li></ul><p class="note-callout">현재는 브라우저 안의 동작 시안이에요. 원래 모바일 프로젝트의 빌드·기기 검증은 별도이며, 수면·칼로리·건강 상태를 측정하지 않아요.</p><h3>첫 반응에서 볼 것</h3><p class="lede">설명 없이 농담을 이해하는지, 한 번 완주하는지, 카드로 친구에게 보내고 싶어 하는지. 다시 켜는 이유까지 확인해요.</p>`,
       post:`<p class="note-kicker">03 / ASK BEFORE BUILDING MORE</p><h2>친구한테 자랑할<br>쓸데있는 기록.</h2><p class="lede">계획 중인 앱으로 소개하는 쓰레드 초안이에요.</p><textarea class="post-copy" id="post-copy" aria-label="쓰레드 게시글 초안">${esc(post)}</textarea><button class="copy-post" data-action="copy-post">글 복사 ↗</button><p class="note-callout">영상은 화면 방향을 고른 뒤 제작해요. 이번 시안에서는 이미지를 저장할 수 있고, 게시나 외부 전송은 하지 않아요.</p>`
     };
-    $('#note-content').innerHTML=content[name]+'<a class="note-link" href="../../#nooprun">아카이브에서 기획 보기 ↗</a>';
+    $('#note-content').innerHTML=content[name]+'<a class="note-link" href="../../#nooprun">전체 기획과 원래 요청 보기 ↗</a>';
   }
   document.addEventListener('click',async e=>{
     const b=e.target.closest('button');if(!b)return;
@@ -283,7 +284,8 @@
     if(action==='metric'){runMetric=b.dataset.metric==='distance'?'distance':'time';render();$(`.metric-tabs [data-metric=${runMetric}]`)?.focus({preventScroll:true});return;}
     if(action==='art'){window.NooprunArt.toggle();render();$('[data-action=art]')?.focus({preventScroll:true});return;}
     if(action==='effects'){window.NooprunSFX?.toggle();render();return;}
-    if(action==='sound'){data.sound=!data.sound;persist();if(!data.sound)window.speechSynthesis?.cancel();render();$('[data-action=sound]')?.focus({preventScroll:true});return;}
+    if(action==='sound'){data.sound=!data.sound;persist();window.NooprunVoice?.setEnabled(data.sound);render();$('[data-action=sound]')?.focus({preventScroll:true});return;}
+    if(action==='voice-preview'){say('start');return;}
     if(action==='pause'){pause();return;}
     if(action==='finish'){if(performance.now()<ignoreStopClickUntil)return;if(e.detail===0)confirmFinish();else toast('종료 버튼을 길게 누르면 기록을 마쳐요.');return;}
     if(action==='keep-resting'){closeModal();return;}
@@ -302,7 +304,7 @@
   function resize(){const width=Math.min(375,Math.max(260,$('.preview').clientWidth)),scale=width/375;$('#phone').style.transform=`scale(${scale})`;$('#phone').style.marginBottom=(812*scale-812)+'px';}
   new ResizeObserver(resize).observe($('.preview'));
   document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelHold();persist();}else updateTimer();});
-  window.addEventListener('pagehide',()=>{cancelHold();persist();window.speechSynthesis?.cancel();});
+  window.addEventListener('pagehide',()=>{cancelHold();persist();window.NooprunVoice?.stop();});
   let lastPaint=0;function frame(time){if(time-lastPaint>160){updateTimer();lastPaint=time;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
   window.nooprun={state:()=>({view,runMetric,holding:!!hold,storageOK,active:active()?{...active(),elapsedMs:elapsed()}:null,result:result?{...result}:null,records:data.records.map(r=>({...r})),goal:data.goal}),showDemo};
   // Deterministic, explicitly labelled demo frames for the introduction video.
