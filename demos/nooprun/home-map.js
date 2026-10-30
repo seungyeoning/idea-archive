@@ -26,9 +26,11 @@
       if(status){status.hidden=!failed;status.textContent=failed?'지도를 불러오지 못했어요. 연결을 확인하고 우리 집을 눌러 주세요.':'';}
     });
     tiles.addTo(map);
-    const house=L.divIcon({className:'own-home-marker',iconSize:[90,94],iconAnchor:[45,59],
-      html:'<span class="own-pin-halo"></span><span class="own-pin-house"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-8 9 8v11h-6v-7H9v7H3Z"/></svg></span><span class="own-pin-label">우리 집</span>'});
+    L.circle(home,{radius:savedHome.radius,color:'#89965d',weight:1,opacity:.5,fillColor:'#e4ff3b',fillOpacity:.09,interactive:false}).addTo(map);
+    const house=L.divIcon({className:'home-position-marker',iconSize:[58,58],iconAnchor:[29,29],
+      html:'<span class="home-position-halo"></span><span class="home-position-dot"></span>'});
     L.marker(home,{icon:house,keyboard:false,interactive:false}).addTo(map);
+    map.panBy([0,Math.round(element.clientHeight*.06)],{animate:false});
     element.setAttribute('role','region');
     element.setAttribute('aria-label','저장된 우리 집 위치 지도. 방향키로 이동하고 더하기와 빼기로 확대하거나 축소할 수 있어요.');
     resizeObserver=new ResizeObserver(()=>map?.invalidateSize({pan:false}));
@@ -36,7 +38,8 @@
   }
   function recenter() {
     if(!map||!home)return;
-    map.setView(home,17,{animate:!matchMedia('(prefers-reduced-motion: reduce)').matches});
+    map.setView(home,17,{animate:false});
+    map.panBy([0,Math.round(map.getContainer().clientHeight*.06)],{animate:false});
     if(!document.querySelector('[data-tile-status]')?.hidden)tiles.redraw();
   }
   window.NooprunHomeMap={mount,unmount,recenter};

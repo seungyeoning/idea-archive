@@ -1,4 +1,4 @@
-/* Running-club start screen. All map shapes are decorative, with no GPS request. */
+/* Reference start-screen layout. The map is provided by the saved-home GPS view. */
 .phone[data-view=home]{background:#fff;color:#111;border-color:#dededb}
 .phone[data-view=home] .home-indicator{background:#111}
 .club-home{padding:8px 0 18px;background:#fff;color:#111;font-family:var(--sans);--club-yellow:#e4ff3b;--club-muted:#666;--club-line:#e9e9e9}

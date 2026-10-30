@@ -128,18 +128,33 @@
   const tabbar=current=>`<nav class="nrc-tabbar own-tabbar" aria-label="앱 메뉴">${[['home','home','눕기'],['history','activity','기록'],['settings','settings','설정']].map(([action,g,label])=>`<button data-action="${action}" ${current===action?'aria-current="page"':''}>${svgIcon(g)}<span>${label}</span></button>`).join('')}</nav>`;
   const topbar=()=>`<header class="own-brand"><img src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"><span>눕런</span><span class="own-brand-caption">집에서 보내는 시간</span></header>`;
   function home() {
-    return `<section class="app-screen nrc-shell nrc-run-start home-gps-start">
-      <header class="nrc-topbar"><img class="home-brand-mark" src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"></header>
-      <h2 class="nrc-title">눕기</h2><div class="nrc-mode-tabs"><span>바로 시작</span></div>
-      <div class="home-gps-stage">
+    const today=new Date(),dayStart=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime(),dayEnd=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1).getTime();
+    const todayRecords=data.records.filter(r=>!r.demo&&r.finishedAt>=dayStart&&r.finishedAt<dayEnd);
+    const todayRest=todayRecords.reduce((sum,r)=>sum+r.elapsedMs,0);
+    const homeIcon='<path d="m3 10 9-7 9 7v10H3Zm6 10v-7h6v7"/>';
+    const chartIcon='<path d="M5 20V12m7 8V4m7 16V8"/>';
+    const gearIcon='<path d="m10 3 .5-1h3l.5 3 2 1 2.5-1 1.5 2.6-2 2V13l2 2-1.5 2.6-2.5-1-2 1-.5 3h-3l-.5-3-2-1-2.5 1L3 15l2-2V10L3 8l1.5-2.6L7 6l2-1Z"/><circle cx="11.5" cy="11.5" r="3"/>';
+    return `<section class="app-screen home lobby-home club-home">
+      <header class="club-header"><h2>집콕</h2><img class="club-app-icon" src="assets/brand/nooprun-recline.png?v=own-1" width="42" height="42" alt="눕런: 다리를 꼬고 누워 있는 사람"></header>
+      <nav class="club-mode-tabs" aria-label="집콕 메뉴"><button data-action="home" aria-current="page">바로 시작</button><button data-action="history">나의 기록</button></nav>
+      <div class="club-stage">
         <div id="home-map" class="own-home-map" aria-label="우리 집 주변 지도"></div>
-        <div class="own-map-empty" ${data.home?'hidden':''}><span class="own-map-house">${svgIcon('home')}</span><strong>우리 집은 어디일까</strong><span>위치를 허용하면 여기에 표시돼요.</span></div>
-        <button class="home-map-recenter" data-action="recenter-home" aria-label="우리 집 위치로 지도 이동">${svgIcon('signal')}</button>
+        <button class="lobby-today club-summary" data-action="history" aria-label="오늘의 집콕 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="club-summary-copy"><span class="lobby-today-label">오늘의 집콕</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count">완주 <b>${todayRecords.length}</b>회</span></span>${window.NooprunArt.markup('club-summary-art')}<svg class="club-summary-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+        <div class="own-map-empty" ${data.home?'hidden':''}><strong>우리 집 위치 확인</strong><span>위치를 허용하면 지도에 표시돼요.</span></div>
         <div class="own-map-status" role="status"><span data-home-status></span><div class="own-home-location-status"><span data-gps-status></span><div class="own-map-actions"><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button data-action="cancel-start" hidden>취소</button></div></div></div>
         <p class="own-tile-status" data-tile-status role="status" hidden></p>
-        <div class="nrc-launch home-launch"><button class="nrc-map-control" data-action="settings" aria-label="설정">${svgIcon('settings')}</button><button class="nrc-start club-start" data-action="start">눕기</button><button class="nrc-map-control home-sound" data-action="sound" aria-label="음성 안내 ${data.sound?'끄기':'켜기'}" aria-pressed="${data.sound}">${svgIcon('sound')}${data.sound?'':'<span class="nrc-slash" aria-hidden="true"></span>'}</button></div>
-      </div>${warning()}${tabbar('home')}</section>`;
+        ${warning()}
+        <div class="club-launch">
+          <button class="club-side-control" data-action="settings" aria-label="설정"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg></button>
+          <button class="club-start" data-action="start" aria-label="눕기">눕기</button>
+          <button class="club-side-control club-sound" data-action="sound" aria-label="시작 음성 ${data.sound?'끄기':'켜기'}" aria-pressed="${!!data.sound}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon('sound')}${data.sound?'':'<path d="M3 3 21 21"/>'}</svg></button>
+        </div>
+        <button class="club-map-caption home-location-link" data-action="recenter-home">우리 집 위치 · 외출하면 자동 종료</button>
+      </div>
+      <nav class="app-bottom-nav club-tabbar" aria-label="앱 메뉴"><button data-action="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true">${homeIcon}</svg><span>집콕</span></button><button data-action="history"><svg viewBox="0 0 24 24" aria-hidden="true">${chartIcon}</svg><span>활동</span></button><button data-action="settings"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg><span>설정</span></button></nav>
+    </section>`;
   }
+
   function counting() {
     return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
   }

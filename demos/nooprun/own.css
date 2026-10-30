@@ -57,27 +57,21 @@
 .own-pin-label{margin-top:7px;background:#faf9f4;border:1px solid #dbe2cd;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:650;line-height:1.5;white-space:nowrap;color:#37472b}
 .own-home-map-scene+.own-today{margin-top:12px;padding:15px 0}.own-start-area .primary:disabled{opacity:.55;cursor:wait}
 @media(max-width:600px){.archive-return{position:static;display:table;width:max-content;margin:12px 12px 0;box-shadow:none}}
-/* Restore the map-first start layout; keep rest-specific actions and saved home GPS. */
-.phone[data-view=home],.phone .home-gps-start{background:#fff;color:#111}
-.home-gps-start .nrc-topbar{padding:0 21px;height:50px}
-.home-brand-mark{width:32px;height:32px;border-radius:50%}
-.home-gps-start h2.nrc-title{margin:3px 22px 13px;font-size:25px;line-height:32px;letter-spacing:-1px;font-weight:550}
-.home-gps-start .nrc-mode-tabs{height:42px;padding:0 22px;font-size:13px;color:#171717}
-.home-gps-stage{position:relative;flex:1;min-height:475px;isolation:isolate;overflow:hidden}
-.home-gps-start .own-home-map{background:#fff}
-.home-gps-start .own-home-map::after{content:"";position:absolute;inset:0;z-index:450;pointer-events:none;background:linear-gradient(#fff 0%,#ffffff55 20%,#ffffff22 57%,#fffffff2 100%)}
-.home-gps-start .own-home-map .leaflet-tile-pane{filter:saturate(.55);opacity:.8}
-.home-gps-start .own-home-map .leaflet-control-attribution{background:#fffffff2;color:#626262;font-size:9px}
-.home-gps-start .own-home-map .leaflet-control-attribution a{color:#626262}
-.home-map-recenter{position:absolute;top:19px;right:23px;z-index:2;width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;background:#fff;color:#171717;box-shadow:0 3px 18px #0000000b}
-.home-gps-start .own-map-empty{bottom:210px}
-.home-gps-start .own-map-status{bottom:177px;left:27px;right:27px;z-index:2;background:#fffffff5;border-color:#eceee6;color:#5f6655}
-.home-gps-start .own-map-status:has(.own-home-location-status[hidden]){display:none}
-.home-gps-start .own-tile-status{top:16px;right:83px;background:#fffffff5}
-.home-launch.nrc-launch{position:absolute;z-index:2;left:0;right:0;bottom:40px;margin:0;gap:27px}
-.home-gps-start .nrc-start.club-start{background:var(--lime);color:#111;width:110px;height:110px;min-height:110px;border-radius:50%;font-size:23px;font-weight:550;padding:0}
-.home-gps-start .nrc-start:disabled{opacity:.5;cursor:wait}
-.home-gps-start .nrc-map-control{color:#171717}
-.home-gps-start .nrc-start:active{transform:scale(.98)}
-.home-gps-start .own-tabbar{background:#fff;backdrop-filter:none;border-color:#f1f1f1}
-.home-gps-start .own-tabbar button{color:#969696}.home-gps-start .own-tabbar button[aria-current=page]{color:#111}
+/* Restore the user's selected daily-card lobby; the central dot is the saved home. */
+.phone[data-view=home],.phone .club-home{background:#fff;color:#111}
+.club-home .club-stage::before{display:none}
+.club-home .own-home-map{background:#f5f6f2}
+.club-home .own-home-map::after{content:"";position:absolute;inset:0;z-index:450;pointer-events:none;background:linear-gradient(#fff 0%,#ffffff75 22%,#ffffff22 43%,#ffffff66 65%,#fff 100%)}
+.club-home .own-home-map .leaflet-tile-pane{filter:saturate(.35);opacity:.66}
+.club-home .own-home-map .leaflet-control-attribution{background:#fffffff5;color:#74786d;font-size:8px;line-height:1.5}
+.club-home .own-home-map .leaflet-control-attribution a{color:#74786d}
+.club-home .club-summary,.club-home .club-launch,.club-home .club-map-caption,.club-home .storage-warning{position:relative;z-index:2}
+.club-home .club-start:disabled{opacity:.5;cursor:wait}
+.club-home .own-map-empty{inset:145px 10px 295px;gap:6px}
+.club-home .own-map-status{bottom:217px;left:25px;right:25px;z-index:3;padding:9px 10px;background:#fffffff5;border-color:#e7e9e1;color:#606854}
+.club-home .own-map-status:has(.own-home-location-status[hidden]){display:none}
+.club-home .own-map-status [data-home-status]{display:none}
+.club-home .own-tile-status{top:151px;left:25px;right:25px;background:#fffffff5;z-index:3}
+.club-home .home-position-marker{display:grid;place-items:center;background:none;border:0}
+.club-home .home-position-halo{position:absolute;inset:0;border-radius:50%;background:#3780e815}
+.club-home .home-position-dot{position:relative;width:15px;height:15px;background:#3780e8;border:3px solid #fff;border-radius:50%;box-shadow:0 1px 4px #244b7e35}
