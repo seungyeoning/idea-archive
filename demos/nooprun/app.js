@@ -155,8 +155,9 @@
     </section>`;
   }
 
-  function counting() {
-    return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><p class="countdown-copy">가장 편한 자세로.<br>이제, 아무것도 하지 마세요.</p><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
+  function counting(preview=false) {
+    const close=preview?'keep-resting':'cancel-countdown';
+    return `<section class="app-screen nrc-countdown" ${preview?'role="dialog" aria-modal="true" aria-labelledby="countdown-preview-title"':''}><header class="app-header">${preview?'<span id="countdown-preview-title">시작 문구 미리보기</span>':''}${iconButton('close',close,preview?'미리보기 닫기':'취소')}</header><div class="countdown-wrap"><p class="countdown-copy">가장 편한 자세로.<br>이제, 아무것도 하지 마세요.</p><strong class="countdown-number" id="${preview?'countdown-preview':'countdown'}" ${preview?'aria-label="카운트다운 화면 예시, 2"':'aria-live="polite"'}>${preview?2:countdown}</strong></div><button class="text-button" data-action="${close}">${preview?'닫기':'취소'}</button></section>`;
   }
   function running() {
     const s=active(),paused=s.status==='paused';
@@ -271,6 +272,14 @@
 
   }
   function showDemo(which) {
+    if(which==='countdown'){
+      closeModal();focusBeforeModal=document.activeElement;
+      const box=document.createElement('div');box.id='modal';box.className='modal-backdrop countdown-preview-backdrop';
+      box.innerHTML=counting(true);$('#phone').append(box);$('#app').inert=true;
+      box.querySelector('button').focus({preventScroll:true});
+      $('#phone').scrollIntoView({block:'center',behavior:'instant'});
+      return;
+    }
     if(data.active){toast('진행 중인 집콕 기록을 먼저 마쳐 주세요. 기록은 그대로 유지돼요.');go('running');return;}
     stopGPS();closeModal();clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;demoClockMs=null;
     if(which==='home')view='home';
@@ -367,7 +376,7 @@
   }
   document.addEventListener('click',async e=>{
     const b=e.target.closest('button');if(!b)return;
-    if(screenLocked&&view==='running'&&sessionPage!=='settings'&&b.dataset.action!=='session-settings'){toast('기록 설정에서 화면 잠금을 해제할 수 있어요.');return;}
+    if(screenLocked&&view==='running'&&sessionPage!=='settings'&&b.closest('#app')&&b.dataset.action!=='session-settings'){toast('기록 설정에서 화면 잠금을 해제할 수 있어요.');return;}
     if(b.dataset.note){note(b.dataset.note);return;}
     if(b.dataset.demo){showDemo(b.dataset.demo);return;}
     if(b.dataset.record){result=data.records.find(r=>r.id===b.dataset.record);clearPhoto();view='complete';render(true);return;}
@@ -376,7 +385,7 @@
     if(b.dataset.period){activityPeriod=b.dataset.period;render();return;}
     if(b.dataset.sessionPage){sessionPage=b.dataset.sessionPage;render();return;}
     const action=b.dataset.action;
-    if(screenLocked&&view==='running'&&sessionPage!=='settings'&&action!=='session-settings'){toast('기록 설정에서 화면 잠금을 해제할 수 있어요.');return;}
+    if(screenLocked&&view==='running'&&sessionPage!=='settings'&&b.closest('#app')&&action!=='session-settings'){toast('기록 설정에서 화면 잠금을 해제할 수 있어요.');return;}
     if(action==='session-settings'){sessionPage='settings';render();return;}
     if(action==='screen-lock'){screenLocked=!screenLocked;render();return;}
     if(openPanel(action))return;
@@ -476,7 +485,9 @@
     exportCard:()=>{if(!result?.demo)return false;exportCard();return true;}
   };
   note();render();resize();
+  const previewCountdown=new URLSearchParams(location.search).get('preview')==='countdown';
   if(data.active?.home){data.active.gpsHadGaps=true;persist();resumeGPS();}
-  else if(!data.active&&!data.home)acquireInitialHome();
+  else if(!data.active&&!data.home&&!previewCountdown)acquireInitialHome();
+  if(previewCountdown)showDemo('countdown');
   window.ready=document.fonts.ready;
 })();
