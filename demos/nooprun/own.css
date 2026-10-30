@@ -1,4 +1,5 @@
 /* Nooprun: a quiet house, one timer, and our lime accent. */
+.nrc-countdown .countdown-copy{margin:0;font-size:15px;line-height:1.8;font-weight:500;letter-spacing:-.2px;text-align:center;color:inherit}
 :root{--paper:#f3f2eb;--ink:#282a23;--muted:#797b6c;--line:#dedfd3;--lime:#e6f344;--nrc-green:var(--lime)}
 .phone,.phone[data-view=running],.phone[data-view=running][data-run-state=running],.phone[data-view=running][data-session-page=settings],.phone[data-view=complete],.phone[data-view=share]{background:#faf9f4;border-color:#dadcd1;color:var(--ink)}
 .phone .nrc-shell,.phone .own-settings{background:#faf9f4;color:var(--ink)}

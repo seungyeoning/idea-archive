@@ -156,7 +156,7 @@
   }
 
   function counting() {
-    return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
+    return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><p class="countdown-copy">가장 편한 자세로.<br>이제, 아무것도 하지 마세요.</p><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
   }
   function running() {
     const s=active(),paused=s.status==='paused';
