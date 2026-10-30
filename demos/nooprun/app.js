@@ -49,42 +49,15 @@
     const today=new Date(),dayStart=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime(),dayEnd=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1).getTime();
     const todayRecords=data.records.filter(r=>!r.demo&&r.finishedAt>=dayStart&&r.finishedAt<dayEnd);
     const todayRest=todayRecords.reduce((sum,r)=>sum+r.elapsedMs,0);
-    const lounge=`<div class="lobby-room" aria-hidden="true">
-      <svg class="lobby-room-backdrop" viewBox="0 0 326 182">
-        <path class="room-wall" d="M1 10h324v142H1z"/>
-        <path class="room-sunbeam" d="M193 76h74l47 75H111z"/>
-        <path class="room-floor" d="M1 152h324v29H1z"/>
-        <path class="room-skirt" d="M1 151h324"/>
-        <rect class="room-window-frame" x="193" y="15" width="88" height="67" rx="2"/>
-        <rect class="room-window-sky" x="198" y="20" width="78" height="57"/>
-        <circle class="room-sun" cx="256" cy="37" r="10"/>
-        <path class="room-cloud" d="M204 49h23m-14-5h19"/>
-        <path class="room-window-bar" d="M236 20v57M198 49h78M187 83h100"/>
-        <path class="room-curtain" d="M186 11v63q-2 8-7 8V11m111 0v71q-6 0-7-8V11"/>
-        <path class="room-rug" d="M55 150h226l18 20H36z"/>
-        <path class="room-rug-seam" d="m53 157 229 0m-236 6h242"/>
-        <path class="room-pot" d="M17 102h27l-4 23H21z"/>
-        <path class="room-stem" d="M31 105V71m0 17-9-10m9 16 9-9"/>
-        <path class="room-leaf" d="M31 78q-13-2-10-14 11 0 10 14m0 12q0-17 13-18 1 15-13 18m-2 8Q13 95 15 83q14 2 14 15"/>
-        <rect class="room-print" x="79" y="24" width="46" height="46" rx="1"/>
-        <path class="room-print-line" d="m88 57 11-20 17 20M88 57h28"/>
-        <circle class="room-print-sun" cx="111" cy="35" r="4"/>
-        <path class="room-sofa-cushion" d="M56 113q0-5 7-5h195q10 0 10 7v27H56z"/>
-      </svg>
-      <span class="room-sign">REST LOUNGE <i>01</i></span>
-      ${sofa}
-      <span class="room-caption">오늘의 목적지, 여기.</span>
-    </div>`;
-    return `<section class="app-screen home lobby-home">
-      <header class="app-header">${brand}${iconButton('settings','settings','설정')}</header>
-      <div class="lobby-greeting"><h2 class="home-headline">오늘은,<br><em>몇 분쯤 누울까?</em></h2><span class="lobby-open"><i></i>쉬어도 되는 곳</span></div>
-      ${lounge}
-      <button class="lobby-today" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="lobby-today-label">오늘의 빈둥</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count">완주 <b>${todayRecords.length}</b>회 <i aria-hidden="true">↗</i></span></button>
-      <div class="section-label"><span>이번엔 얼마나 쉬어볼까?</span><span>일찍 끝내도 괜찮아요</span></div>
-      <div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}">${goalText(n)}</button>`).join('')}</div>
+    return `<section class="app-screen home lobby-home apple-home">
+      <header class="app-header"><span class="apple-wordmark">눕런</span><button class="apple-settings" data-action="settings" aria-label="설정">설정</button></header>
+      <div class="apple-intro"><h2 class="home-headline">잠깐,<br>누워볼까요.</h2><p>쉬는 시간도 나의 기록으로.</p></div>
+      <div class="apple-rest" aria-hidden="true">${sofa}</div>
+      <div class="apple-duration"><div class="section-label"><span>쉬는 시간</span></div><div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}">${goalText(n)}</button>`).join('')}</div></div>
+      <button class="lobby-today" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="lobby-today-label">오늘의 기록</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count"><b>${todayRecords.length}</b>회</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></button>
       ${warning()}
-      <div class="start-control">${primary('빈둥 시작','start','lime')}<button class="sound-line" data-action="sound" aria-pressed="${!!data.sound}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon('sound')}</svg><span>시작 음성 ${data.sound?'켜짐':'꺼짐'}</span><small>“운동을 시작했습니다”</small></button></div>
-      ${nav('home')}
+      <div class="start-control"><button class="primary apple-start" data-action="start"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 6 16.5Z"/></svg><span>빈둥 시작</span></button></div>
+      <nav class="app-bottom-nav apple-tabbar" aria-label="앱 메뉴"><button data-action="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M3 11a2 2 0 0 1 2 2v3h14v-3a2 2 0 0 1 4 0v6H1v-6a2 2 0 0 1 2-2Zm1 8v2m16-2v2"/></svg><span>빈둥</span></button><button data-action="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V12m7 7V5m7 14V9"/></svg><span>나의 기록</span></button></nav>
     </section>`;
   }
   function counting() {
@@ -214,7 +187,7 @@
     const b=e.target.closest('button');if(!b)return;
     if(b.dataset.note){note(b.dataset.note);return;}
     if(b.dataset.demo){showDemo(b.dataset.demo);return;}
-    if(b.dataset.goal!==undefined){data.goal=Number(b.dataset.goal);persist();render();return;}
+    if(b.dataset.goal!==undefined){data.goal=Number(b.dataset.goal);persist();render();$('[data-goal="'+data.goal+'"]')?.focus({preventScroll:true});return;}
     if(b.dataset.record){result=data.records.find(r=>r.id===b.dataset.record);clearPhoto();view='complete';render(true);return;}
     if(b.dataset.mood){if(!result)return;result.mood=b.dataset.mood;const r=data.records.find(r=>r.id===result.id);if(r){r.mood=result.mood;persist();}render();return;}
     const action=b.dataset.action;

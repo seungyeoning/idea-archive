@@ -1,57 +1,41 @@
-/* The lounge surrounds the original Nooprun sofa illustration. */
-.lobby-home{padding:14px 24px 24px;background:#f9f9f2}
-.lobby-home .app-header{min-height:44px;flex-shrink:0}
-.lobby-home .app-brand{font-size:26px}
-.lobby-home .app-brand small{font-size:8px;letter-spacing:1.55px}
-.lobby-home .icon-button{width:44px;height:44px;border-color:#cdd3c5;background:#f3f4ea}
-.lobby-greeting{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;margin-top:16px}
-.lobby-home .home-headline{font-size:31px;line-height:1.22;letter-spacing:-1.45px;margin:0;font-weight:800}
-.lobby-home .home-headline em:after{height:7px;bottom:1px;right:-2px}
-.lobby-open{font-size:9px;line-height:1.3;white-space:nowrap;color:#65705d;display:flex;align-items:center;gap:4px;margin-top:8px}
-.lobby-open i{width:4px;height:4px;background:#657f42;border-radius:50%}
-.lobby-room{position:relative;isolation:isolate;height:182px;flex-shrink:0;margin:10px -3px 0;overflow:hidden;border-radius:8px}
-.lobby-room-backdrop{position:absolute;inset:0;width:100%;height:100%;display:block}
-.room-wall{fill:#efefe3}.room-floor{fill:#e7e8d9}.room-sunbeam{fill:#f9f7de}
-.room-skirt{fill:none;stroke:#c5ccba;stroke-width:1}
-.room-window-frame{fill:#e1e5d4;stroke:#9fa992;stroke-width:1.3}
-.room-window-sky{fill:#e4eddc}.room-sun{fill:#f3dc87}.room-cloud{fill:none;stroke:#f9f9f2;stroke-width:3;stroke-linecap:round}
-.room-window-bar{fill:none;stroke:#8e9b81;stroke-width:1.5;stroke-linecap:round}
-.room-curtain{fill:#c8d1b5;stroke:#9ca98b;stroke-width:1.2}
-.room-rug{fill:#d7e3b8}.room-rug-seam{fill:none;stroke:#b9ca97;stroke-width:1}
-.room-pot{fill:#baba9a;stroke:#7d896b;stroke-width:1.2;stroke-linejoin:round}
-.room-stem{fill:none;stroke:#647555;stroke-width:1.3;stroke-linecap:round}
-.room-leaf{fill:#9dab87;stroke:#6b7c5b;stroke-width:1;stroke-linejoin:round}
-.room-print{fill:#f8f7ea;stroke:#b9c0a9;stroke-width:1.2}.room-print-line{fill:none;stroke:#a8b88c;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.room-print-sun{fill:#c7d98f}
-.room-sofa-cushion{fill:#eef2df}
-.lobby-room .sofa-scene{position:absolute;left:0;right:0;bottom:0;height:130px;margin:0;z-index:2}
-.lobby-room .sofa-scene svg{stroke-width:2.1}
-.lobby-room .sofa-caption{display:none}
-.room-sign{position:absolute;left:12px;top:12px;font-size:6px;line-height:1;letter-spacing:1.2px;color:#718061;writing-mode:vertical-rl;transform:rotate(180deg)}
-.room-sign i{font-style:normal;margin-top:9px;color:#43513c}
-.room-caption{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:9px;letter-spacing:.2px;color:#5d694f;z-index:3}
-.lobby-today{min-height:46px;flex-shrink:0;display:flex;align-items:center;gap:12px;width:100%;margin-top:9px;border-bottom:1px solid #d3d9ca;text-align:left;padding:0 1px 4px}
-.lobby-today-label{font-size:10px;color:#62705c;white-space:nowrap}
-.lobby-today strong{font:27px/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:.2px}
-.lobby-today-count{margin-left:auto;font-size:10px;color:#64705c;white-space:nowrap}
-.lobby-today-count b{font-weight:600;color:var(--ink)}
-.lobby-today-count i{font-style:normal;font-size:15px;margin-left:9px;color:var(--ink)}
-.lobby-home .section-label{margin-top:17px;margin-bottom:9px;font-size:10px;gap:6px;white-space:nowrap}
-.lobby-home .section-label span:first-child{font-weight:600;color:#394532}
-.lobby-home .section-label span+span{font-size:9px;color:#7d8677}
-.lobby-home .goal-options{gap:6px;flex-shrink:0}
-.lobby-home .goal-options button{min-height:44px;border-radius:10px;background:#f1f3e9;border-color:#d1d8c7;transition:background-color .16s,transform .16s}
-.lobby-home .goal-options button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#f9f9f2}
-.lobby-home .goal-options button:active{transform:translateY(1px)}
-.lobby-home .start-control{padding-top:17px;margin-top:auto;flex-shrink:0}
-.lobby-home .primary{min-height:58px;border-radius:14px;font-size:16px;letter-spacing:-.3px;padding:14px 20px;border:1px solid #c4db75;transition:background-color .16s,transform .16s}
-.lobby-home .primary:hover{background:#d2ee71}
-.lobby-home .primary:active{transform:translateY(1px)}
-.lobby-home .sound-line{min-height:44px;margin-top:0;gap:6px;font-size:10px}
-.lobby-home .sound-line svg{height:14px;width:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.lobby-home .sound-line small{font-size:9px;color:#7a8471;margin-left:3px;white-space:nowrap}
-.lobby-home .app-bottom-nav{margin-top:8px;padding-top:0;min-height:44px;flex-shrink:0}
-.lobby-home .app-bottom-nav button{min-width:44px;min-height:44px;font-size:11px}
-.lobby-home .app-bottom-nav button[aria-current=page]{position:relative}
-.lobby-home .app-bottom-nav button[aria-current=page]:before{content:"";position:absolute;top:0;left:calc(50% - 10px);width:20px;height:2px;background:var(--ink)}
-.lobby-home button:focus-visible{outline:2px solid #516b2b;outline-offset:3px}
-@media(prefers-reduced-motion:reduce){.lobby-home *{animation:none!important;transition:none!important}}
+/* Quiet typography, one accent, familiar controls. The original character is kept. */
+.phone[data-view=home]{background:#fff;color:#1d1d1f;border-color:#e5e5e7}
+.phone[data-view=home] .home-indicator{background:#1d1d1f}
+.apple-home{--apple-blue:#0066cc;--apple-secondary:#636368;--apple-line:#e5e5ea;padding:12px 24px 20px;background:#fff;font-family:var(--sans);color:#1d1d1f}
+.apple-home .app-header{min-height:44px;flex-shrink:0;align-items:center}
+.apple-wordmark{font-size:1.375rem;font-weight:700;line-height:1.2;letter-spacing:-.035em}
+.apple-settings{min-width:44px;min-height:44px;padding:8px 0 8px 12px;font-size:.875rem;font-weight:500;color:var(--apple-blue);border-radius:10px}
+.apple-intro{margin-top:28px;flex-shrink:0}
+.apple-home .home-headline{margin:0;font:700 2.125rem/1.18 var(--sans);letter-spacing:-.045em;color:#1d1d1f}
+.apple-intro p{margin:12px 0 0;font-size:.875rem;line-height:1.5;letter-spacing:-.01em;color:var(--apple-secondary)}
+.apple-rest{display:flex;align-items:center;justify-content:center;min-height:118px;margin:18px 0 16px;flex-shrink:0}
+.apple-rest .sofa-scene{width:260px;height:106px;margin:0}
+.apple-rest .sofa-scene svg{stroke:#5a6260;stroke-width:1.9}
+.apple-rest .sofa-caption{display:none}
+.apple-duration{flex-shrink:0}
+.apple-home .section-label{margin:0 0 10px;font-size:.8125rem;line-height:1.4;letter-spacing:0;color:var(--apple-secondary)}
+.apple-home .goal-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;background:#f2f2f7;padding:4px;border-radius:14px}
+.apple-home .goal-options button{min-width:44px;min-height:44px;border:0;border-radius:10px;background:transparent;color:#5b5b60;font-size:.875rem;font-weight:500;transition:background-color 120ms,color 120ms,transform 100ms}
+.apple-home .goal-options button[aria-pressed=true]{background:#fff;color:#1d1d1f;font-weight:600;box-shadow:0 1px 4px #00000012}
+.apple-home .goal-options button:active{background:#e5e5ea;transform:scale(.97)}
+.apple-home .lobby-today{display:flex;align-items:center;gap:9px;width:100%;min-height:56px;margin-top:23px;padding:10px 0;border-top:1px solid var(--apple-line);border-bottom:1px solid var(--apple-line);text-align:left;flex-shrink:0}
+.lobby-today-label{font-size:.8125rem;color:var(--apple-secondary);white-space:nowrap;margin-right:auto}
+.apple-home .lobby-today strong{font:600 1.0625rem/1.3 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:#1d1d1f}
+.lobby-today-count{font-size:.8125rem;color:var(--apple-secondary);white-space:nowrap}
+.lobby-today-count b{font-weight:400}
+.apple-home .lobby-today>svg{width:14px;height:14px;fill:none;stroke:#8e8e93;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-left:2px}
+.apple-home .start-control{margin-top:auto;padding-top:30px;flex-shrink:0}
+.apple-home .apple-start{min-height:56px;justify-content:center;gap:8px;padding:14px 20px;border:0;border-radius:17px;background:var(--apple-blue);color:#fff;font-size:1.0625rem;font-weight:600;letter-spacing:-.015em;transition:transform 100ms,background-color 100ms;box-shadow:none}
+.apple-start>svg{width:17px;height:17px;fill:currentColor;stroke:none}
+.apple-home .apple-start:hover{background:#005fbd}
+.apple-home .apple-start:active{background:#0057b0;transform:scale(.98)}
+.apple-home .apple-tabbar{border-top:0;margin-top:22px;padding-top:0;display:flex;justify-content:space-around;gap:20px;flex-shrink:0}
+.apple-home .apple-tabbar button{min-width:64px;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:5px 12px;border-radius:12px;color:#76767c;font-size:.6875rem;font-weight:500;line-height:1.2}
+.apple-tabbar svg{height:21px;width:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.apple-home .apple-tabbar button[aria-current=page]{color:var(--apple-blue);font-weight:600}
+.apple-home .apple-tabbar button:active,.apple-home .apple-settings:active{background:#f2f2f7}
+.apple-home button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.apple-home button:focus-visible{outline:3px solid var(--apple-blue);outline-offset:3px}
+.apple-home .storage-warning{font-size:.8125rem;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.apple-home *{animation:none!important;transition:none!important}}
+@media(prefers-contrast:more){.apple-home{--apple-secondary:#3f3f44;--apple-line:#8e8e93}.apple-home .goal-options{border:1px solid #8e8e93}.apple-home .goal-options button[aria-pressed=true]{outline:1px solid #3f3f44;outline-offset:-1px}}
