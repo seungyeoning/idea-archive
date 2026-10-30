@@ -34,9 +34,9 @@ window.ARCHIVE_ITEMS = [
   {
     id: 'eraser', title: '증강 지우개 따먹기', category: 'game',
     tagline: '한 번의 착지로, 내 것이 되는 순간.',
-    summary: '내 지우개를 뒤집어 상대 위에 포개면 한 점. 판마다 자석·길쭉이·착붙 같은 능력을 골라, 익숙한 지우개 따먹기에 다른 한 수를 더하는 게임이에요.',
-    status: '플레이 시안', theme: '#f1dfc5', cover: 'assets/eraser.webp', demo: 'demos/eraser/', video: 'assets/eraser.mp4',
-    features: ['드래그로 방향과 힘을 정해 뒤집기', '세 가지 증강으로 착지 방식 바꾸기', '연습 상대와 먼저 세 번 포개기'],
+    summary: '내 지우개를 뒤집어 상대 위에 포개면 한 점. ROUNDS를 참고해 다섯 카드 중 하나를 고르고, 진 쪽이 추가 능력을 얻어 반격하는 게임이에요. 모은 카드의 효과는 경기 끝까지 쌓입니다.',
+    status: '플레이 시안', theme: '#f1dfc5', cover: 'assets/eraser.webp?v=rounds-1', demo: 'demos/eraser/', video: null,
+    features: ['다섯 카드 중 하나를 골라 능력 쌓기', '라운드에서 진 쪽만 추가 카드 선택하기', '양쪽 빌드를 보며 먼저 세 번 포개기'],
     note: '한 기기에서 연습 상대와 플레이할 수 있습니다. 온라인 친구 대전·계정·매칭은 구현 전이에요.', updated: '2026-10-30'
   },
   {
