@@ -10,8 +10,8 @@
 .club-mode-tabs [aria-current=page]{color:#111;font-weight:700}
 .club-mode-tabs [aria-current=page]:after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#111}
 .club-stage{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;flex:1;min-height:0;overflow:hidden;padding:21px 25px 10px}
-.club-map{position:absolute;inset:0;width:100%;height:100%;z-index:-2;opacity:.62;pointer-events:none}
-.club-stage:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#fff 1%,#ffffffa8 24%,#ffffff45 48%,#ffffffb8 75%,#fff 100%)}
+.club-map{position:absolute;inset:0;width:100%;height:100%;z-index:-2;opacity:.92;pointer-events:none}
+.club-stage:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#fff 0%,#ffffff75 22%,#ffffff00 43%,#ffffff18 65%,#fff 100%)}
 .club-summary{display:flex;align-items:center;width:100%;min-height:91px;padding:12px 14px;background:#fff;border:1px solid #e8e8e5;border-radius:2px;text-align:left;flex-shrink:0;position:relative}
 .club-summary-copy{display:grid;grid-template-columns:auto auto;gap:3px 10px;align-items:baseline;flex-shrink:0}
 .club-summary .lobby-today-label{grid-column:1/-1;color:#555;font-size:.6875rem;font-weight:500}
@@ -22,22 +22,16 @@
 .club-summary .sofa-scene svg{stroke:#747b72;stroke-width:2}
 .club-summary .sofa-caption{display:none}
 .club-summary-chevron{font-size:24px;color:#999;font-weight:300;margin-left:6px}
-.club-goal-readout{display:flex;flex-direction:column;align-items:center;margin-top:28px;flex-shrink:0}
-.club-goal-label{font-size:.75rem;color:#555}
-.club-goal-readout strong{font:800 4.75rem/.98 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.085em;margin:6px 0 4px;padding-right:.06em}
-.club-goal-unit{font-size:.6875rem;color:#6d6d6d}
-.club-location{display:flex;align-items:center;gap:7px;justify-content:center;margin:18px 0 0;font-size:.625rem;color:#757575;flex-shrink:0}
-.club-position{height:8px;width:8px;border-radius:50%;background:#4179c6;outline:4px solid #4179c61a;border:1px solid #fff}
-.club-launch{display:flex;width:100%;justify-content:center;gap:28px;align-items:center;margin-top:auto;padding-top:21px;flex-shrink:0}
-.club-start{width:118px;height:118px;min-height:118px;flex-shrink:0;background:var(--club-yellow);border-radius:50%;color:#0c0c0c;font-size:1.5rem;font-weight:800;letter-spacing:-.045em;transition:transform 100ms,background-color 100ms}
+.club-location{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#3a82e519;pointer-events:none}
+.club-position{height:15px;width:15px;border-radius:50%;background:#3780e8;border:3px solid #fff;box-shadow:0 1px 4px #244b7e35}
+.club-launch{display:flex;width:100%;justify-content:center;gap:28px;align-items:center;margin-top:auto;padding-top:21px;padding-bottom:21px;flex-shrink:0}
+.club-start{width:126px;height:126px;min-height:126px;flex-shrink:0;background:var(--club-yellow);border-radius:50%;color:#0c0c0c;font-size:1.5rem;font-weight:800;letter-spacing:-.045em;transition:transform 100ms,background-color 100ms}
 .club-start:hover{background:#daef34}
 .club-start:active{transform:scale(.95);background:#d1e82d}
 .club-side-control{height:46px;width:46px;border-radius:50%;background:#fff;border:1px solid #d9dcd6;display:grid;place-items:center;padding:10px;flex-shrink:0;transition:transform 100ms}
 .club-side-control svg{height:23px;width:23px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .club-side-control:active{transform:scale(.94);background:#ebedE7}
 .club-sound[aria-pressed=false]{color:#888}
-.club-goal-trigger{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;min-width:100px;font-size:.8125rem;margin-top:6px;font-weight:600}
-.club-goal-trigger svg{height:14px;width:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
 .club-map-caption{font-size:.5625rem;line-height:1.5;color:#777;margin-top:2px}
 .club-home .club-tabbar{margin:0;padding:10px 22px 0;gap:0;justify-content:space-between;border-top:1px solid var(--club-line);background:#fff;flex-shrink:0}
 .club-tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:68px;min-height:51px;font-size:.625rem;font-weight:500;color:#777;padding:4px 10px}
@@ -46,18 +40,7 @@
 .club-tabbar [aria-current=page] svg{fill:#111;stroke:#111}
 .club-tabbar button:active,.club-mode-tabs button:active{opacity:.55}
 .club-home button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.club-home button:focus-visible,.club-goal-sheet button:focus-visible{outline:3px solid #2b65b1;outline-offset:3px}
+.club-home button:focus-visible{outline:3px solid #2b65b1;outline-offset:3px}
 .club-home .storage-warning{font-size:.6875rem;flex-shrink:0;margin:8px 0 0}
-.club-goal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:24px 25px 31px}
-.club-goal-sheet header{display:flex;align-items:center;justify-content:space-between;gap:15px}
-.club-goal-sheet h2{font-size:1.375rem;letter-spacing:-.04em}
-.club-goal-sheet .icon-button{border:0;background:#f2f2f2}
-.club-goal-sheet p{font-size:.8125rem;margin:7px 0 19px}
-.club-goal-sheet .goal-options{display:flex;flex-direction:column;gap:0}
-.club-goal-sheet .goal-options button{display:flex;align-items:center;gap:12px;min-height:64px;padding:12px 13px;border:0;border-top:1px solid #e9e9e9;border-radius:0;background:#fff;color:#111;text-align:left;font-size:1rem;font-weight:600}
-.club-goal-sheet .goal-options button small{font-size:.6875rem;font-weight:400;color:#777}
-.club-goal-sheet .goal-options button[aria-pressed=true]{background:#f3f6e9;color:#111;border-color:#e9e9e9}
-.goal-check{margin-left:auto;font-size:1.125rem}
-.club-goal-sheet .goal-options button:active{background:#e8edda}
 @media(prefers-reduced-motion:reduce){.club-home *{animation:none!important;transition:none!important}}
-@media(prefers-contrast:more){.club-home{--club-muted:#333;--club-line:#888}.club-goal-label,.club-goal-unit,.club-map-caption,.club-location,.lobby-today-count{color:#444}.club-summary{border-color:#888}.club-side-control{border-color:#666}}
+@media(prefers-contrast:more){.club-home{--club-muted:#333;--club-line:#888}.club-map-caption,.lobby-today-count{color:#444}.club-summary{border-color:#888}.club-side-control{border-color:#666}}

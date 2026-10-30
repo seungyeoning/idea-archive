@@ -3,7 +3,7 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const KEY = 'nooprun.concept.v1';
-  const defaultStore = () => ({version:1, goal:1200, sound:true, active:null, records:[]});
+  const defaultStore = () => ({version:1, goal:0, sound:true, active:null, records:[]});
   let storageOK = true, data = defaultStore();
   const validRecord = r => r && typeof r.id === 'string' && Number.isFinite(r.elapsedMs) && r.elapsedMs >= 0 && Number.isFinite(r.finishedAt);
   try {
@@ -12,7 +12,7 @@
       const parsed = JSON.parse(raw);
       if (parsed.version !== 1 || !Array.isArray(parsed.records)) throw new Error('Unsupported saved data');
       data = {...defaultStore(), ...parsed, records:parsed.records.filter(validRecord)};
-      if (![0,600,1200,1800].includes(data.goal)) data.goal = 1200;
+      data.goal = 0; // New sessions are open-ended; saved sessions and records retain their original goal.
       if (data.active && (!Number.isFinite(data.active.baseMs) || data.active.baseMs < 0 || !['running','paused'].includes(data.active.status) || (data.active.status === 'running' && !Number.isFinite(data.active.runSince)))) throw new Error('Invalid active session');
     }
   } catch { storageOK = false; data = defaultStore(); }
@@ -25,7 +25,6 @@
   const formatTime = ms => {const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return h ? `${h}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;};
   const duration = ms => ms < 60000 ? `${Math.floor(ms/1000)}초` : `${Math.floor(ms/60000)}분${Math.floor(ms/1000)%60 ? ' '+Math.floor(ms/1000)%60+'초' : ''}`;
   const dateLabel = time => new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric'}).format(time);
-  const goalText = seconds => seconds ? `${seconds/60}분` : '자유';
   function persist() {
     if (!storageOK) return;
     try { localStorage.setItem(KEY,JSON.stringify(data)); }
@@ -58,15 +57,13 @@
       <div class="club-stage">
         <svg class="club-map" viewBox="0 0 375 530" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="375" height="530" fill="#f1f2ee"/><g fill="#e6e8e3"><path d="M0 42h91v77H0Zm108-40h94v117h-94Zm111 0h80v119h-80Zm98 4h58v116h-58ZM0 138h93v92H0Zm110 0h92v92h-92Zm108 0h89v92h-89Zm108 0h49v92h-49ZM0 250h91v100H0Zm110 0h92v100h-92Zm109 0h86v100h-86Zm107 0h49v100h-49ZM0 370h91v160H0Zm109 0h94v160h-94Zm111 0h90v160h-90Zm109 0h46v160h-46Z"/></g><path d="m-30 410 198-75 250-44" stroke="#fff" stroke-width="21" fill="none"/><path d="m-25 410 198-75 250-44" stroke="#e1e4dd" stroke-width="2" fill="none"/><path d="M-20 152q67 10 101 4t40 36l-22 27H-20Z" fill="#e0e9d9"/><path d="M293 366h82v115h-82z" fill="#e0e9d9"/><g stroke="#daddd6" stroke-width="1" fill="none"><path d="M18 57h55v43H18Zm110-30h54v73h-54Zm109 3h43v70h-43ZM130 156h51v54h-51Zm107 0h51v54h-51ZM16 271h57v55H16Zm116 0h48v55h-48Zm104 0h51v40h-51ZM19 391h52v77H19Zm112-9h50v91h-50Zm104 8h51v99h-51"/></g></svg>
         <button class="lobby-today club-summary" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="club-summary-copy"><span class="lobby-today-label">오늘의 빈둥</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count">완주 <b>${todayRecords.length}</b>회</span></span>${sofa}<span class="club-summary-chevron" aria-hidden="true">›</span></button>
-        <div class="club-goal-readout"><span class="club-goal-label">${data.goal?'목표 시간':'자유 빈둥'}</span><strong>${data.goal?formatTime(data.goal*1000):'0.00'}</strong><span class="club-goal-unit">${data.goal?'분 : 초':'km'}</span></div>
-        <div class="club-location" aria-label="실제 위치를 사용하지 않는 시안 지도"><span class="club-position" aria-hidden="true"></span><span>아무 데도 안 갈 예정</span></div>
+        <div class="club-location" aria-hidden="true"><span class="club-position"></span></div>
         ${warning()}
         <div class="club-launch">
           <button class="club-side-control" data-action="settings" aria-label="설정"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg></button>
           <button class="club-start" data-action="start" aria-label="빈둥 시작">시작</button>
           <button class="club-side-control club-sound" data-action="sound" aria-label="시작 음성 ${data.sound?'끄기':'켜기'}" aria-pressed="${!!data.sound}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon('sound')}${data.sound?'':'<path d="M3 3 21 21"/>'}</svg></button>
         </div>
-        <button class="club-goal-trigger" data-action="goals" aria-haspopup="dialog">목표 설정 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button>
         <span class="club-map-caption">시안 지도 · 위치를 수집하지 않아요</span>
       </div>
       <nav class="app-bottom-nav club-tabbar" aria-label="앱 메뉴"><button data-action="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true">${homeIcon}</svg><span>빈둥</span></button><button data-action="history"><svg viewBox="0 0 24 24" aria-hidden="true">${chartIcon}</svg><span>활동</span></button><button data-action="settings"><svg viewBox="0 0 24 24" aria-hidden="true">${gearIcon}</svg><span>설정</span></button></nav>
@@ -78,7 +75,7 @@
   }
   function running() {
     const s=active(),paused=s.status==='paused';
-    return `<section class="app-screen running"><header class="app-header"><div class="running-top"><i></i><span id="running-state">${paused?'TAKE YOUR TIME':'REST IN PROGRESS'}</span></div>${iconButton('sound','sound',data.sound?'음성 끄기':'음성 켜기')}</header><p class="run-mode">${paused?'잠깐 멈춰 있어요.':'좋아요. 그 자세 그대로.'}</p><span class="timer-label">${s.demo?'시연용 빈둥 시간':'빈둥 시간'}</span><div class="timer" id="timer" role="timer" aria-label="빈둥 경과 시간">${formatTime(elapsed())}</div><div class="run-visual" aria-hidden="true"><i class="still-dot"></i><span>YOU ARE RIGHT HERE.</span></div><div class="run-metrics"><div><strong>0.00</strong><small>km</small><label>이동 거리 · 빈둥 콘셉트</label></div><div><strong>${s.goal?s.goal/60:'FREE'}</strong><small>${s.goal?'분':''}</small><label>오늘 정한 시간</label></div></div><p class="run-note" id="run-note">${s.goal&&elapsed()>=s.goal*1000?'목표만큼 쉬었어요. 더 쉬어도 좋아요.':'페이스가 아주 일정해요.<br>서두르지 않아도 괜찮아요.'}</p><div class="run-actions"><button class="pause" data-action="pause">${paused?'다시 빈둥':'잠깐 멈춤'}</button><button class="finish" data-action="finish">오늘은 여기까지</button></div>${s.demo?'<p class="demo-badge">시연 중 · 실제 기록에 저장되지 않아요</p>':''}${warning()}</section>`;
+    return `<section class="app-screen running"><header class="app-header"><div class="running-top"><i></i><span id="running-state">${paused?'TAKE YOUR TIME':'REST IN PROGRESS'}</span></div>${iconButton('sound','sound',data.sound?'음성 끄기':'음성 켜기')}</header><p class="run-mode">${paused?'잠깐 멈춰 있어요.':'좋아요. 그 자세 그대로.'}</p><span class="timer-label">${s.demo?'시연용 빈둥 시간':'빈둥 시간'}</span><div class="timer" id="timer" role="timer" aria-label="빈둥 경과 시간">${formatTime(elapsed())}</div><div class="run-visual" aria-hidden="true"><i class="still-dot"></i><span>YOU ARE RIGHT HERE.</span></div><div class="run-metrics"><div><strong>0.00</strong><small>km</small><label>이동 거리 · 빈둥 콘셉트</label></div><div><strong>${s.goal?s.goal/60:'FREE'}</strong><small>${s.goal?'분':''}</small><label>${s.goal?'오늘 정한 시간':'빈둥 모드'}</label></div></div><p class="run-note" id="run-note">${s.goal&&elapsed()>=s.goal*1000?'목표만큼 쉬었어요. 더 쉬어도 좋아요.':'페이스가 아주 일정해요.<br>서두르지 않아도 괜찮아요.'}</p><div class="run-actions"><button class="pause" data-action="pause">${paused?'다시 빈둥':'잠깐 멈춤'}</button><button class="finish" data-action="finish">오늘은 여기까지</button></div>${s.demo?'<p class="demo-badge">시연 중 · 실제 기록에 저장되지 않아요</p>':''}${warning()}</section>`;
   }
   function card(r) {
     return `<div class="result-card${photo?' photo-preview':''}" id="result-card"><div class="card-top"><span>NOOP RUN CLUB</span><span>${r.demo?'DEMO / 시연':dateLabel(r.finishedAt)}</span></div><strong class="card-time">${formatTime(r.elapsedMs)}</strong><p class="card-desc">${r.demo?'시연용 완주 기록':'아무것도 하지 않은 시간'}</p><hr class="card-rule"><div class="card-footer"><div><strong>0.00 <small>km</small></strong></div><span>오늘도, 가만히 완주.<br>${r.demo?'화면 예시':'빈둥 기록'}</span></div></div>`;
@@ -92,7 +89,7 @@
     return `<section class="app-screen history"><header class="app-header">${brand}${iconButton('back','home','빈둥 시작으로')}</header><h2>모든 쉼에는<br>기록이 있다.</h2><div class="history-total"><strong>${Math.floor(total/60000)} <small style="font:16px var(--sans)">분</small></strong><span>이 브라우저에서 남긴 ${records.length}번의 완주</span></div>${records.length?`<ul class="records">${records.slice().reverse().map(r=>`<li><button data-record="${esc(r.id)}"><span><strong>${formatTime(r.elapsedMs)}</strong><small>${dateLabel(r.finishedAt)} · 빈둥 기록</small></span><span class="record-detail">${esc(r.mood||'내 속도로 쉬었어요')}<br>0.00 km &nbsp; ↗</span></button></li>`).join('')}</ul>`:'<div class="empty-state">아직 비어 있는 기록장.<br>잠깐 누워 있는 것부터 시작해요.</div>'}${warning()}${primary('다시 빈둥 시작','home')}${nav('history')}</section>`;
   }
   function settings() {
-    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>버튼 효과음</span><button class="switch" role="switch" aria-label="버튼 효과음" aria-checked="${!!window.NooprunSFX?.state().enabled}" data-action="effects">${window.NooprunSFX?.state().enabled?'켜짐':'꺼짐'}</button></div><p class="effects-description">선택할 때는 가볍게 톡, 완주할 때는 작은 축하 소리.<br>음성 안내와 따로 켜고 끌 수 있어요.</p><div class="settings-row"><span>시작·멈춤·완주 음성</span><button class="switch" role="switch" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>시작하면 “운동을 시작했습니다”라고 말해요. 이 시안에서는 기기의 한국어 읽기 음성을 사용해요. 브라우저와 음성 설치 상태에 따라 소리가 나지 않을 수 있어요.</p><p>타이머와 기록은 이 브라우저 안에 보관해요. 로그인, 실제 운동량 측정, 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 정한 시간보다 일찍 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
+    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>버튼 효과음</span><button class="switch" role="switch" aria-label="버튼 효과음" aria-checked="${!!window.NooprunSFX?.state().enabled}" data-action="effects">${window.NooprunSFX?.state().enabled?'켜짐':'꺼짐'}</button></div><p class="effects-description">선택할 때는 가볍게 톡, 완주할 때는 작은 축하 소리.<br>음성 안내와 따로 켜고 끌 수 있어요.</p><div class="settings-row"><span>시작·멈춤·완주 음성</span><button class="switch" role="switch" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>시작하면 “운동을 시작했습니다”라고 말해요. 이 시안에서는 기기의 한국어 읽기 음성을 사용해요. 브라우저와 음성 설치 상태에 따라 소리가 나지 않을 수 있어요.</p><p>타이머와 기록은 이 브라우저 안에 보관해요. 로그인, 실제 운동량 측정, 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 언제 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
   }
   function render(focus=false) {
     if (view==='running'&&!active())view='home';
@@ -112,7 +109,7 @@
   }
   function cancelCountdown() {clearInterval(countdownTimer);countdownTimer=null;view='home';render(true);}
   function beginCountdown() {
-    countdown=3;countdownGoal=data.goal;view='countdown';render(true);
+    countdown=3;countdownGoal=0;view='countdown';render(true);
     clearInterval(countdownTimer);
     countdownTimer=setInterval(()=>{
       countdown--;
@@ -145,18 +142,11 @@
     if(data.active){toast('진행 중인 빈둥 기록을 먼저 마쳐 주세요. 기록은 그대로 유지돼요.');go('running');return;}
     closeModal();clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;demoClockMs=null;
     if(which==='home')view='home';
-    if(which==='running'){demoSession={id:'demo-active',status:'running',baseMs:18*60000+42000,runSince:Date.now(),goal:1800,demo:true};view='running';}
-    if(which==='complete'){result={id:'demo-result',elapsedMs:1800000,finishedAt:Date.now(),goal:1800,mood:'',demo:true};view='complete';}
+    if(which==='running'){demoSession={id:'demo-active',status:'running',baseMs:18*60000+42000,runSince:Date.now(),goal:0,demo:true};view='running';}
+    if(which==='complete'){result={id:'demo-result',elapsedMs:1800000,finishedAt:Date.now(),goal:0,mood:'',demo:true};view='complete';}
     render(true);
   }
   function closeModal() {$('#modal')?.remove();$('#app').inert=false;modalAction=null;focusBeforeModal?.focus({preventScroll:true});}
-  function chooseGoal() {
-    if (view!=='home'||$('#modal')) return;
-    focusBeforeModal=document.activeElement;
-    const box=document.createElement('div');box.id='modal';box.className='modal-backdrop';box.dataset.kind='goals';
-    box.innerHTML=`<section class="modal club-goal-sheet" role="dialog" aria-modal="true" aria-labelledby="goal-title"><header><h2 id="goal-title">목표 설정</h2>${iconButton('close','close-goals','목표 설정 닫기')}</header><p>오늘은 얼마나 누워 있을까요?</p><div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}"><span>${goalText(n)}</span><small>${n?'시간 목표':'시간 제한 없이'}</small><span class="goal-check" aria-hidden="true">${data.goal===n?'✓':''}</span></button>`).join('')}</div></section>`;
-    $('#phone').append(box);$('#app').inert=true;box.querySelector('[aria-pressed="true"]').focus({preventScroll:true});
-  }
   function confirmFinish() {
     const s=active();if(!s)return;
     if(s.goal&&elapsed(s)<s.goal*1000){
@@ -197,24 +187,20 @@
   function note(name='experience') {
     document.querySelectorAll('[data-note]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.note===name)));
     const content={
-      experience:`<p class="note-kicker">01 / A VERY SERIOUS REST</p><h2>화면은 진지하게.<br>기록은 조금 엉뚱하게.</h2><p class="lede">나이키런 같은 익숙한 운동 기록 흐름에, 누워서 빈둥거린 시간을 담아요. 재미가 터지는 순간은 0.00km로 완주 카드를 받았을 때예요.</p><ol class="flow"><li><strong>편한 자세로 시작</strong>자유롭게, 또는 10·20·30분을 정해요.</li><li><strong>“운동을 시작했습니다.”</strong>3초 뒤 음성과 함께 빈둥 타이머가 돌아요.</li><li><strong>멈춤도, 일찍 마침도 자유</strong>쉬고 싶은 만큼만 쉬어요. 거리 표시는 0.00km.</li><li><strong>완주 카드를 남겨요</strong>내 사진에 빈둥 시간과 기분을 얹어요.</li></ol><p class="note-callout">오래 누워 있는 경쟁보다 “나 오늘 이것도 완주했어”라는 가벼운 농담. 기록을 받은 사람이 한 번 웃고, 친구에게 보내고 싶은 순간을 만듭니다.</p>`,
-      scope:`<p class="note-kicker">02 / FIRST VERSION</p><h2>한 번의 완주가<br>끝까지 이어지도록.</h2><h3>먼저 만들 것</h3><ul class="scope-list"><li>시작·멈춤·재개·완주 타이머와 음성</li><li>자유 / 10·20·30분 목표</li><li>날짜별 기록과 누적 빈둥 시간</li><li>사진·기분을 넣은 완주 카드 저장</li><li>로그인 없이 시작하는 흐름</li></ul><h3>나중에 검토할 것</h3><ul class="scope-list"><li>캐릭터 자세, 기록 카드, 음성 팩</li><li>잠금 화면·다이나믹 아일랜드의 타이머</li><li>가격은 반응을 본 뒤 결정</li></ul><p class="note-callout">현재는 브라우저 안의 동작 시안이에요. 원래 모바일 프로젝트의 빌드·기기 검증은 별도이며, 수면·칼로리·건강 상태를 측정하지 않아요.</p><h3>첫 반응에서 볼 것</h3><p class="lede">설명 없이 농담을 이해하는지, 한 번 완주하는지, 카드로 친구에게 보내고 싶어 하는지. 다시 켜는 이유까지 확인해요.</p>`,
+      experience:`<p class="note-kicker">01 / A VERY SERIOUS REST</p><h2>화면은 진지하게.<br>기록은 조금 엉뚱하게.</h2><p class="lede">나이키런 같은 익숙한 운동 기록 흐름에, 누워서 빈둥거린 시간을 담아요. 재미가 터지는 순간은 0.00km로 완주 카드를 받았을 때예요.</p><ol class="flow"><li><strong>편한 자세로 시작</strong>목표 시간 없이, 시작 버튼만 눌러요.</li><li><strong>“운동을 시작했습니다.”</strong>3초 뒤 음성과 함께 빈둥 타이머가 돌아요.</li><li><strong>멈춤도, 일찍 마침도 자유</strong>쉬고 싶은 만큼만 쉬어요. 거리 표시는 0.00km.</li><li><strong>완주 카드를 남겨요</strong>내 사진에 빈둥 시간과 기분을 얹어요.</li></ol><p class="note-callout">오래 누워 있는 경쟁보다 “나 오늘 이것도 완주했어”라는 가벼운 농담. 기록을 받은 사람이 한 번 웃고, 친구에게 보내고 싶은 순간을 만듭니다.</p>`,
+      scope:`<p class="note-kicker">02 / FIRST VERSION</p><h2>한 번의 완주가<br>끝까지 이어지도록.</h2><h3>먼저 만들 것</h3><ul class="scope-list"><li>시작·멈춤·재개·완주 타이머와 음성</li><li>목표 시간 없이 자유롭게 기록</li><li>날짜별 기록과 누적 빈둥 시간</li><li>사진·기분을 넣은 완주 카드 저장</li><li>로그인 없이 시작하는 흐름</li></ul><h3>나중에 검토할 것</h3><ul class="scope-list"><li>캐릭터 자세, 기록 카드, 음성 팩</li><li>잠금 화면·다이나믹 아일랜드의 타이머</li><li>가격은 반응을 본 뒤 결정</li></ul><p class="note-callout">현재는 브라우저 안의 동작 시안이에요. 원래 모바일 프로젝트의 빌드·기기 검증은 별도이며, 수면·칼로리·건강 상태를 측정하지 않아요.</p><h3>첫 반응에서 볼 것</h3><p class="lede">설명 없이 농담을 이해하는지, 한 번 완주하는지, 카드로 친구에게 보내고 싶어 하는지. 다시 켜는 이유까지 확인해요.</p>`,
       post:`<p class="note-kicker">03 / ASK BEFORE BUILDING MORE</p><h2>친구한테 자랑할<br>쓸데있는 기록.</h2><p class="lede">계획 중인 앱으로 소개하는 쓰레드 초안이에요.</p><textarea class="post-copy" id="post-copy" aria-label="쓰레드 게시글 초안">${esc(post)}</textarea><button class="copy-post" data-action="copy-post">글 복사 ↗</button><p class="note-callout">영상은 화면 방향을 고른 뒤 제작해요. 이번 시안에서는 이미지를 저장할 수 있고, 게시나 외부 전송은 하지 않아요.</p>`
     };
     $('#note-content').innerHTML=content[name]+'<a class="note-link" href="../../#nooprun">아카이브에서 기획 보기 ↗</a>';
   }
   document.addEventListener('click',async e=>{
-    if(e.target.id==='modal'&&e.target.dataset.kind==='goals'){closeModal();return;}
     const b=e.target.closest('button');if(!b)return;
     if(b.dataset.note){note(b.dataset.note);return;}
     if(b.dataset.demo){showDemo(b.dataset.demo);return;}
-    if(b.dataset.goal!==undefined){data.goal=Number(b.dataset.goal);persist();closeModal();render();$('[data-action=goals]')?.focus({preventScroll:true});return;}
     if(b.dataset.record){result=data.records.find(r=>r.id===b.dataset.record);clearPhoto();view='complete';render(true);return;}
     if(b.dataset.mood){if(!result)return;result.mood=b.dataset.mood;const r=data.records.find(r=>r.id===result.id);if(r){r.mood=result.mood;persist();}render();return;}
     const action=b.dataset.action;
     if(['home','history','settings'].includes(action)){go(action);return;}
-    if(action==='goals'){chooseGoal();return;}
-    if(action==='close-goals'){closeModal();return;}
     if(action==='start'){beginCountdown();return;}
     if(action==='cancel-countdown'){cancelCountdown();return;}
     if(action==='effects'){window.NooprunSFX?.toggle();render();return;}
