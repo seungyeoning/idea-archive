@@ -128,9 +128,17 @@
   const tabbar=current=>`<nav class="nrc-tabbar own-tabbar" aria-label="앱 메뉴">${[['home','home','눕기'],['history','activity','기록'],['settings','settings','설정']].map(([action,g,label])=>`<button data-action="${action}" ${current===action?'aria-current="page"':''}>${svgIcon(g)}<span>${label}</span></button>`).join('')}</nav>`;
   const topbar=()=>`<header class="own-brand"><img src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"><span>눕런</span><span class="own-brand-caption">집에서 보내는 시간</span></header>`;
   function home() {
-    const now=new Date(),dayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
-    const today=data.records.filter(r=>r.finishedAt>=dayStart),total=today.reduce((n,r)=>n+r.elapsedMs,0);
-    return `<section class="app-screen nrc-shell own-home">${topbar()}<div class="own-home-heading"><h2>눕기</h2><button class="own-home-chip" data-action="recenter-home" aria-label="우리 집 위치로 지도 이동">${svgIcon('home')}<span>우리 집</span></button></div><div class="own-home-scene own-home-map-scene"><div id="home-map" class="own-home-map" aria-label="우리 집 주변 지도"></div><div class="own-map-empty" ${data.home?'hidden':''}><span class="own-map-house">${svgIcon('home')}</span><strong>우리 집은 어디일까</strong><span>위치를 허용하면 여기에 표시돼요.</span></div><div class="own-map-status" role="status"><span data-home-status></span><div class="own-home-location-status"><span data-gps-status></span><div class="own-map-actions"><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button data-action="cancel-start" hidden>취소</button></div></div></div><p class="own-tile-status" data-tile-status role="status" hidden></p></div><div class="own-today"><span>오늘 누운 시간</span><button data-action="history" aria-label="오늘의 눕기 기록 보기"><strong>${formatTime(total)}</strong>${svgIcon('arrow')}</button></div><div class="own-start-area">${primary('눕기','start')}<p>편하게 누워요. 시간은 눕런이 셀게요.</p></div>${warning()}${tabbar('home')}</section>`;
+    return `<section class="app-screen nrc-shell nrc-run-start home-gps-start">
+      <header class="nrc-topbar"><img class="home-brand-mark" src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"></header>
+      <h2 class="nrc-title">눕기</h2><div class="nrc-mode-tabs"><span>바로 시작</span></div>
+      <div class="home-gps-stage">
+        <div id="home-map" class="own-home-map" aria-label="우리 집 주변 지도"></div>
+        <div class="own-map-empty" ${data.home?'hidden':''}><span class="own-map-house">${svgIcon('home')}</span><strong>우리 집은 어디일까</strong><span>위치를 허용하면 여기에 표시돼요.</span></div>
+        <button class="home-map-recenter" data-action="recenter-home" aria-label="우리 집 위치로 지도 이동">${svgIcon('signal')}</button>
+        <div class="own-map-status" role="status"><span data-home-status></span><div class="own-home-location-status"><span data-gps-status></span><div class="own-map-actions"><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button data-action="cancel-start" hidden>취소</button></div></div></div>
+        <p class="own-tile-status" data-tile-status role="status" hidden></p>
+        <div class="nrc-launch home-launch"><button class="nrc-map-control" data-action="settings" aria-label="설정">${svgIcon('settings')}</button><button class="nrc-start club-start" data-action="start">눕기</button><button class="nrc-map-control home-sound" data-action="sound" aria-label="음성 안내 ${data.sound?'끄기':'켜기'}" aria-pressed="${data.sound}">${svgIcon('sound')}${data.sound?'':'<span class="nrc-slash" aria-hidden="true"></span>'}</button></div>
+      </div>${warning()}${tabbar('home')}</section>`;
   }
   function counting() {
     return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
