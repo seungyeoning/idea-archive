@@ -17,10 +17,11 @@
     }
   } catch { storageOK = false; data = defaultStore(); }
   let view = data.active ? 'running' : 'home', result = null, countdown = 3, countdownTimer = null;
+  let demoClockMs = null;
   let countdownGoal = data.goal, demoSession = null, photo = null, photoToken = 0, toastTimer, modalAction = null, focusBeforeModal;
   const newID = () => globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2);
   const active = () => demoSession || data.active;
-  const elapsed = (session = active()) => session ? Math.max(0, session.baseMs + (session.status === 'running' ? Math.max(0,Date.now()-session.runSince) : 0)) : 0;
+  const elapsed = (session = active()) => session ? (session.demo && Number.isFinite(demoClockMs) ? demoClockMs : Math.max(0, session.baseMs + (session.status === 'running' ? Math.max(0,Date.now()-session.runSince) : 0))) : 0;
   const formatTime = ms => {const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return h ? `${h}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;};
   const duration = ms => ms < 60000 ? `${Math.floor(ms/1000)}초` : `${Math.floor(ms/60000)}분${Math.floor(ms/1000)%60 ? ' '+Math.floor(ms/1000)%60+'초' : ''}`;
   const dateLabel = time => new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric'}).format(time);
@@ -45,7 +46,46 @@
   const sofa = `<div class="sofa-scene" aria-hidden="true"><svg viewBox="0 0 320 130"><path d="M34 98h248M48 99v10m223-10v10M54 91V67q0-7 7-7h195q11 0 11 10v21M46 70q-9-6-13 0v24h251V70q-5-7-13 0M55 88h210"/><g class="rest-breath"><path d="M88 66q7-8 22-6l59 6 44-28 31 27M166 65l45-14 36 19M110 61l27-13 27 6M136 48l-14 14M244 65l18 1m-16 4h21"/><circle cx="78" cy="56" r="12"/><path d="m73 56 3 1m8-2 3-1M88 59l12 3"/></g><path d="M54 74h51M51 70q4-10 15-6l29 7M275 20h13l-12 11h13m-27-23h8l-7 7h8"/></svg><span class="sofa-caption">MOVEMENT: OPTIONAL.</span></div>`;
 
   function home() {
-    return `<section class="app-screen home"><header class="app-header">${brand}${iconButton('settings','settings','설정')}</header><h2 class="home-headline">아무것도 안 해도,<br><em>오늘의 완주.</em></h2>${sofa}<div class="section-label"><span>얼마나 쉬어볼까요?</span><span>일찍 끝내도 괜찮아요</span></div><div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}">${goalText(n)}</button>`).join('')}</div>${warning()}<div class="start-control">${primary('빈둥 시작','start')}<button class="sound-line" data-action="sound" aria-pressed="${!!data.sound}">◌ &nbsp; 시작 음성 ${data.sound?'켜짐':'꺼짐'} · “운동을 시작했습니다”</button></div>${nav('home')}</section>`;
+    const today=new Date(),dayStart=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime(),dayEnd=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1).getTime();
+    const todayRecords=data.records.filter(r=>!r.demo&&r.finishedAt>=dayStart&&r.finishedAt<dayEnd);
+    const todayRest=todayRecords.reduce((sum,r)=>sum+r.elapsedMs,0);
+    const lounge=`<div class="lobby-room" aria-hidden="true">
+      <svg class="lobby-room-backdrop" viewBox="0 0 326 182">
+        <path class="room-wall" d="M1 10h324v142H1z"/>
+        <path class="room-sunbeam" d="M193 76h74l47 75H111z"/>
+        <path class="room-floor" d="M1 152h324v29H1z"/>
+        <path class="room-skirt" d="M1 151h324"/>
+        <rect class="room-window-frame" x="193" y="15" width="88" height="67" rx="2"/>
+        <rect class="room-window-sky" x="198" y="20" width="78" height="57"/>
+        <circle class="room-sun" cx="256" cy="37" r="10"/>
+        <path class="room-cloud" d="M204 49h23m-14-5h19"/>
+        <path class="room-window-bar" d="M236 20v57M198 49h78M187 83h100"/>
+        <path class="room-curtain" d="M186 11v63q-2 8-7 8V11m111 0v71q-6 0-7-8V11"/>
+        <path class="room-rug" d="M55 150h226l18 20H36z"/>
+        <path class="room-rug-seam" d="m53 157 229 0m-236 6h242"/>
+        <path class="room-pot" d="M17 102h27l-4 23H21z"/>
+        <path class="room-stem" d="M31 105V71m0 17-9-10m9 16 9-9"/>
+        <path class="room-leaf" d="M31 78q-13-2-10-14 11 0 10 14m0 12q0-17 13-18 1 15-13 18m-2 8Q13 95 15 83q14 2 14 15"/>
+        <rect class="room-print" x="79" y="24" width="46" height="46" rx="1"/>
+        <path class="room-print-line" d="m88 57 11-20 17 20M88 57h28"/>
+        <circle class="room-print-sun" cx="111" cy="35" r="4"/>
+        <path class="room-sofa-cushion" d="M56 113q0-5 7-5h195q10 0 10 7v27H56z"/>
+      </svg>
+      <span class="room-sign">REST LOUNGE <i>01</i></span>
+      ${sofa}
+      <span class="room-caption">오늘의 목적지, 여기.</span>
+    </div>`;
+    return `<section class="app-screen home lobby-home">
+      <header class="app-header">${brand}${iconButton('settings','settings','설정')}</header>
+      <div class="lobby-greeting"><h2 class="home-headline">오늘은,<br><em>몇 분쯤 누울까?</em></h2><span class="lobby-open"><i></i>쉬어도 되는 곳</span></div>
+      ${lounge}
+      <button class="lobby-today" data-action="history" aria-label="오늘의 빈둥 ${duration(todayRest)}, 완주 ${todayRecords.length}회. 나의 기록 보기"><span class="lobby-today-label">오늘의 빈둥</span><strong>${formatTime(todayRest)}</strong><span class="lobby-today-count">완주 <b>${todayRecords.length}</b>회 <i aria-hidden="true">↗</i></span></button>
+      <div class="section-label"><span>이번엔 얼마나 쉬어볼까?</span><span>일찍 끝내도 괜찮아요</span></div>
+      <div class="goal-options" role="group" aria-label="목표 빈둥 시간">${[0,600,1200,1800].map(n=>`<button data-goal="${n}" aria-pressed="${data.goal===n}">${goalText(n)}</button>`).join('')}</div>
+      ${warning()}
+      <div class="start-control">${primary('빈둥 시작','start','lime')}<button class="sound-line" data-action="sound" aria-pressed="${!!data.sound}"><svg viewBox="0 0 24 24" aria-hidden="true">${icon('sound')}</svg><span>시작 음성 ${data.sound?'켜짐':'꺼짐'}</span><small>“운동을 시작했습니다”</small></button></div>
+      ${nav('home')}
+    </section>`;
   }
   function counting() {
     return `<section class="app-screen"><header class="app-header">${brand}${iconButton('close','cancel-countdown','시작 취소')}</header><div class="countdown-wrap"><p>가장 편한 자세로.<br>이제, 아무것도 하지 마세요.</p><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">아직 준비 중이에요</button></section>`;
@@ -66,7 +106,7 @@
     return `<section class="app-screen history"><header class="app-header">${brand}${iconButton('back','home','빈둥 시작으로')}</header><h2>모든 쉼에는<br>기록이 있다.</h2><div class="history-total"><strong>${Math.floor(total/60000)} <small style="font:16px var(--sans)">분</small></strong><span>이 브라우저에서 남긴 ${records.length}번의 완주</span></div>${records.length?`<ul class="records">${records.slice().reverse().map(r=>`<li><button data-record="${esc(r.id)}"><span><strong>${formatTime(r.elapsedMs)}</strong><small>${dateLabel(r.finishedAt)} · 빈둥 기록</small></span><span class="record-detail">${esc(r.mood||'내 속도로 쉬었어요')}<br>0.00 km &nbsp; ↗</span></button></li>`).join('')}</ul>`:'<div class="empty-state">아직 비어 있는 기록장.<br>잠깐 누워 있는 것부터 시작해요.</div>'}${warning()}${primary('다시 빈둥 시작','home')}${nav('history')}</section>`;
   }
   function settings() {
-    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>시작·멈춤·완주 음성</span><button class="switch" role="switch" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>시작하면 “운동을 시작했습니다”라고 말해요. 이 시안에서는 기기의 한국어 읽기 음성을 사용해요. 브라우저와 음성 설치 상태에 따라 소리가 나지 않을 수 있어요.</p><p>타이머와 기록은 이 브라우저 안에 보관해요. 로그인, 실제 운동량 측정, 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 정한 시간보다 일찍 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
+    return `<section class="app-screen settings"><header class="app-header">${brand}${iconButton('back','home','설정 닫기')}</header><h2>내 페이스대로.</h2><div class="settings-row"><span>버튼 효과음</span><button class="switch" role="switch" aria-label="버튼 효과음" aria-checked="${!!window.NooprunSFX?.state().enabled}" data-action="effects">${window.NooprunSFX?.state().enabled?'켜짐':'꺼짐'}</button></div><p class="effects-description">선택할 때는 가볍게 톡, 완주할 때는 작은 축하 소리.<br>음성 안내와 따로 켜고 끌 수 있어요.</p><div class="settings-row"><span>시작·멈춤·완주 음성</span><button class="switch" role="switch" aria-checked="${!!data.sound}" data-action="sound">${data.sound?'켜짐':'꺼짐'}</button></div><p>시작하면 “운동을 시작했습니다”라고 말해요. 이 시안에서는 기기의 한국어 읽기 음성을 사용해요. 브라우저와 음성 설치 상태에 따라 소리가 나지 않을 수 있어요.</p><p>타이머와 기록은 이 브라우저 안에 보관해요. 로그인, 실제 운동량 측정, 다른 사람에게 전송하는 기능은 없어요.</p><p>오래 쉬는 사람을 순위로 매기지 않아요. 정한 시간보다 일찍 끝내도 기록은 남길 수 있어요.</p><p>앱 이름 ‘눕런’과 이 화면은 기획 시안이에요. 브라우저 저장 공간을 지우면 여기에서 남긴 기록도 사라져요.</p>${warning()}</section>`;
   }
   function render(focus=false) {
     if (view==='running'&&!active())view='home';
@@ -102,11 +142,11 @@
     else{s.runSince=Date.now();s.status='running';say('운동을 다시 시작합니다.');}
     if(!s.demo)persist();render();
   }
-  function finish() {
+  function finish({silent=false}={}) {
     const s=active();if(!s)return;
     result={id:s.id,elapsedMs:elapsed(s),finishedAt:Date.now(),goal:s.goal,mood:'',demo:!!s.demo};
     if(!s.demo){if(!data.records.some(r=>r.id===result.id))data.records.push({...result});data.active=null;persist();}
-    demoSession=null;view='complete';clearPhoto();render(true);say('운동을 완료했습니다. 잘 쉬었습니다.');
+    demoSession=null;demoClockMs=null;view='complete';clearPhoto();render(true);if(!silent){window.NooprunSFX?.play('complete');say('운동을 완료했습니다. 잘 쉬었습니다.');}
   }
   function updateTimer() {
     const t=$('#timer');if(!t||!active())return;
@@ -117,7 +157,7 @@
   }
   function showDemo(which) {
     if(data.active){toast('진행 중인 빈둥 기록을 먼저 마쳐 주세요. 기록은 그대로 유지돼요.');go('running');return;}
-    clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;
+    clearInterval(countdownTimer);countdownTimer=null;clearPhoto();demoSession=null;demoClockMs=null;
     if(which==='home')view='home';
     if(which==='running'){demoSession={id:'demo-active',status:'running',baseMs:18*60000+42000,runSince:Date.now(),goal:1800,demo:true};view='running';}
     if(which==='complete'){result={id:'demo-result',elapsedMs:1800000,finishedAt:Date.now(),goal:1800,mood:'',demo:true};view='complete';}
@@ -181,6 +221,7 @@
     if(['home','history','settings'].includes(action)){go(action);return;}
     if(action==='start'){beginCountdown();return;}
     if(action==='cancel-countdown'){cancelCountdown();return;}
+    if(action==='effects'){window.NooprunSFX?.toggle();render();return;}
     if(action==='sound'){data.sound=!data.sound;persist();if(!data.sound)window.speechSynthesis?.cancel();render();return;}
     if(action==='pause'){pause();return;}
     if(action==='finish'){confirmFinish();return;}
@@ -192,7 +233,7 @@
   });
   document.addEventListener('change',e=>{if(e.target.id==='photo-input')choosePhoto(e.target.files[0]);});
   document.addEventListener('keydown',e=>{
-    if(e.target.id==='photo-label'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();$('#photo-input').click();}
+    if(e.target.id==='photo-label'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();window.NooprunSFX?.play('tap');$('#photo-input').click();}
     const modal=$('#modal');
     if(modal){if(e.key==='Escape'){closeModal();return;}if(e.key==='Tab'){const buttons=[...modal.querySelectorAll('button')],first=buttons[0],last=buttons.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}}
     else if(e.key==='Escape'&&view==='countdown')cancelCountdown();
@@ -203,6 +244,37 @@
   window.addEventListener('pagehide',()=>{persist();window.speechSynthesis?.cancel();});
   let lastPaint=0;function frame(time){if(time-lastPaint>160){updateTimer();lastPaint=time;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
   window.nooprun={state:()=>({view,storageOK,active:active()?{...active(),elapsedMs:elapsed()}:null,result:result?{...result}:null,records:data.records.map(r=>({...r})),goal:data.goal}),showDemo};
+  // Deterministic, explicitly labelled demo frames for the introduction video.
+  // An actual active session is never replaced; no demo state is persisted.
+  function videoFrame({scene='home',elapsedMs=0,countdown:count=3}={}) {
+    if (!['home','countdown','running','complete'].includes(scene)) throw new Error('Unknown video scene');
+    if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid demo time');
+    if (data.active) return {ok:false,reason:'real-session-active'};
+    clearInterval(countdownTimer);countdownTimer=null;
+    $('#modal')?.remove();modalAction=null;
+    if (scene !== 'complete' && view !== scene) clearPhoto();
+    if (scene === 'home') {demoSession=null;demoClockMs=null;result=null;view='home';}
+    if (scene === 'countdown') {demoSession=null;demoClockMs=null;countdown=Math.max(1,Math.min(3,Math.round(count)));view='countdown';}
+    if (scene === 'running') {
+      demoClockMs=elapsedMs;
+      demoSession={id:'demo-video',status:'running',baseMs:elapsedMs,runSince:Date.now(),startedAt:Date.now(),goal:data.goal,demo:true};
+      view='running';
+    }
+    if (scene === 'complete' && !(view==='complete' && result?.demo && result.elapsedMs===elapsedMs)) {
+      demoClockMs=elapsedMs;
+      demoSession={id:'demo-video',status:'running',baseMs:elapsedMs,runSince:Date.now(),startedAt:Date.now(),goal:data.goal,demo:true};
+      finish({silent:true});
+    }
+    render();
+    return {ok:true,...window.nooprun.state()};
+  }
+  window.nooprunVideo={
+    reset:()=>videoFrame({scene:'home'}),
+    frame:videoFrame,
+    finish:()=>{if(!demoSession?.demo)return false;finish({silent:true});return window.nooprun.state();},
+    getState:()=>window.nooprun.state(),
+    exportCard:()=>{if(!result?.demo)return false;exportCard();return true;}
+  };
   note();render();resize();
   window.ready=document.fonts.ready;
 })();

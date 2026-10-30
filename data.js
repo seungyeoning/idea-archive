@@ -43,8 +43,8 @@ window.ARCHIVE_ITEMS = [
     id: 'nooprun', title: '눕런', category: 'app',
     tagline: '아무것도 안 한 시간도, 나의 기록.',
     summary: '내가 몇 분이나 누워 뒹굴거렸는지 궁금해서 생각한 앱이에요. 누운 시간을 재고, 러닝 완주처럼 0.00km 기록 카드로 남겨요.',
-    status: '조작 시안', theme: '#f0f0e8', cover: 'assets/nooprun.webp', demo: 'demos/nooprun/', video: 'assets/nooprun.mp4',
-    features: ['누운 순간부터 쉬는 시간 재기', '이번 휴식의 기록 확인하기', '내 빈둥 기록을 카드로 남기기'],
+    status: '조작 시안', theme: '#f0f0e8', cover: 'assets/nooprun-lobby.png', demo: 'demos/nooprun/', video: 'assets/nooprun.mp4',
+    features: ['창가 라운지에서 누운 시간 재기', '버튼마다 짧은 소리, 음성·효과음 개별 설정', '오늘의 빈둥 기록과 완주 카드 남기기'],
     note: '타이머와 기록을 체험하는 웹 시안입니다. 실제 달리기나 GPS 거리를 측정하는 앱은 아니에요.', updated: '2026-10-30'
   },
   {
