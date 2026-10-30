@@ -12,16 +12,18 @@
 .club-stage{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;flex:1;min-height:0;overflow:hidden;padding:21px 25px 10px}
 .club-map{position:absolute;inset:0;width:100%;height:100%;z-index:-2;opacity:.92;pointer-events:none}
 .club-stage:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#fff 0%,#ffffff75 22%,#ffffff00 43%,#ffffff18 65%,#fff 100%)}
-.club-summary{display:flex;align-items:center;width:100%;min-height:91px;padding:12px 14px;background:#fff;border:1px solid #e8e8e5;border-radius:2px;text-align:left;flex-shrink:0;position:relative}
-.club-summary-copy{display:grid;grid-template-columns:auto auto;gap:3px 10px;align-items:baseline;flex-shrink:0}
-.club-summary .lobby-today-label{grid-column:1/-1;color:#555;font-size:.6875rem;font-weight:500}
-.club-summary strong{font:750 1.375rem/1.25 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.06em}
-.lobby-today-count{font-size:.625rem;color:#777}
-.lobby-today-count b{font-weight:400}
-.club-summary .sofa-scene{width:125px;height:60px;margin:0 0 0 auto;flex-shrink:0}
-.club-summary .sofa-scene svg{stroke:#747b72;stroke-width:2}
-.club-summary .sofa-caption{display:none}
-.club-summary-chevron{font-size:24px;color:#999;font-weight:300;margin-left:6px}
+/* A single editorial illustration, with readable real-session typography. */
+.club-summary{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:center;gap:12px;width:100%;min-height:126px;padding:18px 15px 18px 19px;background:#f8f9f5;border:1px solid #dfe3d9;border-radius:12px;text-align:left;flex-shrink:0;position:relative;overflow:hidden;transition:background-color 120ms,transform 120ms}
+.club-summary-copy{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;position:relative;z-index:1}
+.club-summary .lobby-today-label{color:#4e544b;font-size:.75rem;font-weight:600;line-height:1.4;letter-spacing:-.01em}
+.club-summary strong{font:750 2.125rem/1.1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}
+.lobby-today-count{font-size:.6875rem;line-height:1.4;color:#60665c;letter-spacing:-.01em}
+.lobby-today-count b{font-weight:500}
+.club-summary-art{display:block;align-self:center;justify-self:end;width:100%;max-width:164px;min-width:0;height:106px;margin:-9px -8px -9px 0;pointer-events:none}
+.club-summary-art img{display:block;width:100%;height:100%;object-fit:contain}
+.club-summary-chevron{position:absolute;top:14px;right:13px;width:13px;height:13px;fill:none;stroke:#646a60;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.club-summary:active{background:#edf0e7;transform:scale(.99)}
+@media(hover:hover) and (pointer:fine){.club-summary:hover{background:#f0f3e9}}
 .club-location{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#3a82e519;pointer-events:none}
 .club-position{height:15px;width:15px;border-radius:50%;background:#3780e8;border:3px solid #fff;box-shadow:0 1px 4px #244b7e35}
 .club-launch{display:flex;width:100%;justify-content:center;gap:28px;align-items:center;margin-top:auto;padding-top:21px;padding-bottom:21px;flex-shrink:0}
