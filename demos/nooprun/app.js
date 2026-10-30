@@ -23,7 +23,7 @@
   let countSeconds=3, screenLocked=false;
   let demoClockMs = null, runMetric = 'time', hold = null, holdFrame = null, ignoreStopClickUntil = 0;
   let countdownGoal = data.goal, demoSession = null, photo = null, photoToken = 0, toastTimer, modalAction = null, focusBeforeModal;
-  let gpsIntent = null, setupThenStart = false;
+  let gpsIntent = null, startAfterHome = false;
   let gpsState = {status:'idle',distance:null,accuracy:null};
   const newID = () => globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2);
   const active = () => demoSession || data.active;
@@ -46,6 +46,15 @@
         if (state.status === 'inside') data.active.maxHomeDistance = Math.max(data.active.maxHomeDistance || 0,state.distance);
         persist();
       }
+      if (gpsIntent === 'initial-home' && state.status === 'ready') {
+        const fix=gps.fix();
+        if(fix && fix.accuracy<=50 && !data.home){
+          saveHome(fix);const shouldStart=startAfterHome;startAfterHome=false;
+          stopGPS();render();
+          if(shouldStart)requestStart();
+          return;
+        }
+      }
       updateGPS();
       if (gpsIntent === 'start' && state.status === 'inside') {gpsIntent = 'countdown';beginCountdown();}
     },
@@ -59,24 +68,34 @@
     const save=$('[data-action=save-home]'),fix=gps.fix();
     if(save)save.disabled=!fix || fix.accuracy>50;
     const retry=$('[data-action=gps-retry]');
-    if(retry)retry.hidden=!['weak','stale','denied','timeout','unavailable','unsupported','boundary','outside'].includes(gpsState.status);
+    if(retry)retry.hidden=!['weak','stale','denied','timeout','unavailable','unsupported','boundary','outside','idle'].includes(gpsState.status);
+    const label=$('[data-home-status]');
+    if(label)label.textContent=gpsIntent==='start'?'집에 있는지 확인하고 있어요':data.home?'오늘의 코스는, 집.':'현재 위치를 우리 집으로 표시해요';
+    const start=$('[data-action=start]');
+    if(start)start.disabled=(gpsIntent==='start'||startAfterHome)&&gpsState.status==='acquiring';
+    const cancel=$('[data-action=cancel-start]');if(cancel)cancel.hidden=!(gpsIntent==='start'||startAfterHome);
+    const inline=$('.own-home-location-status');
+    if(inline)inline.hidden=!!data.home&&gpsIntent!=='start';
   }
-  function homeSetup() {
-    return `<section class="app-screen home-setup own-onboarding"><header class="own-brand"><img src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"><span>눕런</span></header><span class="own-step">처음 한 번만</span><h2>지금 있는 곳이<br>집인가요?</h2><p class="own-intro">현재 위치를 집으로 기억해 둘게요.<br>집을 나서면 눕기 기록이 끝나요.</p><div class="own-house" aria-hidden="true">${svgIcon('home')}<span class="own-house-dot"></span></div><div class="gps-info" role="status"><strong data-gps-status></strong></div><button class="gps-retry" data-action="gps-retry" hidden>위치 허용하고 다시 확인</button>${primary('여기가 집이에요','save-home')}<button class="own-text-button" data-action="cancel-gps">먼저 둘러보기</button><p class="location-privacy">집 위치는 이 기기에만 저장해요.</p>${warning()}</section>`;
+  function saveHome(fix) {
+    data.home={latitude:fix.latitude,longitude:fix.longitude,accuracy:fix.accuracy,radius:fix.accuracy<=25?50:100,savedAt:Date.now()};persist();
   }
-  function locating() {
-    return `<section class="app-screen home-setup own-onboarding"><header class="app-header">${iconButton('back','cancel-gps','돌아가기')}<span>눕기 준비</span><span></span></header><h2>집에 있는지<br>확인하고 있어요.</h2><div class="own-house" aria-hidden="true">${svgIcon('home')}<span class="own-house-dot"></span></div><div class="gps-info" role="status"><strong data-gps-status></strong></div><p class="own-intro">확인이 끝나면 ${countSeconds}초 뒤 시작해요.</p><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button class="own-text-button" data-action="setup-home">집 위치 다시 확인</button></section>`;
+  function acquireInitialHome(thenStart=false) {
+    startAfterHome=thenStart;gpsIntent='initial-home';gps.start();
   }
-  function openSetup(thenStart=false) {
+  function openSetup() {
     if(data.active){toast('기록을 마친 뒤 집 위치를 바꿀 수 있어요.');return;}
-    setupThenStart=thenStart;gpsIntent='setup';view='homeSetup';render(true);gps.start();
+    showPanel('지금 있는 곳을 우리 집으로',`<p>집에 있을 때 바꿔 주세요. 저장된 집은 아래 버튼을 눌렀을 때만 변경돼요.</p><p data-gps-status role="status"></p><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button class="primary" data-action="save-home" disabled>여기로 변경</button>`);
+    startAfterHome=false;gpsIntent='relocate';gps.start();
   }
   function requestStart() {
     if(data.active){go('running');return;}
-    if(!data.home){openSetup(true);return;}
-    demoSession=null;gpsIntent='start';view='locating';render(true);gps.start(data.home,{detectExit:false});
+    demoSession=null;
+    if(view!=='home'){view='home';render(true);}
+    if(!data.home){acquireInitialHome(true);return;}
+    gpsIntent='start';gps.start(data.home,{detectExit:false});
   }
-  function stopGPS() {gpsIntent=null;gps.stop();gpsState={status:'idle',distance:null,accuracy:null};}
+  function stopGPS() {startAfterHome=false;gpsIntent=null;gps.stop();gpsState={status:'idle',distance:null,accuracy:null};}
   window.NooprunVoice?.setEnabled(data.sound);
   async function say(cue) {
     if (!data.sound) return;
@@ -108,11 +127,10 @@
   const svgIcon=name=>`<svg viewBox="0 0 24 24" aria-hidden="true">${glyphs[name]||icon(name)||''}</svg>`;
   const tabbar=current=>`<nav class="nrc-tabbar own-tabbar" aria-label="앱 메뉴">${[['home','home','눕기'],['history','activity','기록'],['settings','settings','설정']].map(([action,g,label])=>`<button data-action="${action}" ${current===action?'aria-current="page"':''}>${svgIcon(g)}<span>${label}</span></button>`).join('')}</nav>`;
   const topbar=()=>`<header class="own-brand"><img src="assets/brand/nooprun-recline.png?v=own-1" width="32" height="32" alt="눕런"><span>눕런</span><span class="own-brand-caption">집에서 보내는 시간</span></header>`;
-  // Stylized public fixture: no coordinates, buildings, or labels from the private phone capture.
   function home() {
     const now=new Date(),dayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
     const today=data.records.filter(r=>r.finishedAt>=dayStart),total=today.reduce((n,r)=>n+r.elapsedMs,0);
-    return `<section class="app-screen nrc-shell own-home">${topbar()}<div class="own-home-heading"><h2>눕기</h2><button class="own-home-chip" data-action="setup-home">${svgIcon('home')}<span>${data.home?'우리 집':'집 확인하기'}</span></button></div><div class="own-home-scene">${window.NooprunArt.markup('own-lounge-art')}<span>오늘의 코스는, 집.</span></div><div class="own-today"><span>오늘 누운 시간</span><button data-action="history" aria-label="오늘의 눕기 기록 보기"><strong>${formatTime(total)}</strong>${svgIcon('arrow')}</button></div><div class="own-start-area">${primary('눕기 시작','start')}<p>편하게 누워요. 시간은 눕런이 셀게요.</p></div>${warning()}${tabbar('home')}</section>`;
+    return `<section class="app-screen nrc-shell own-home">${topbar()}<div class="own-home-heading"><h2>눕기</h2><button class="own-home-chip" data-action="recenter-home" aria-label="우리 집 위치로 지도 이동">${svgIcon('home')}<span>우리 집</span></button></div><div class="own-home-scene own-home-map-scene"><div id="home-map" class="own-home-map" aria-label="우리 집 주변 지도"></div><div class="own-map-empty" ${data.home?'hidden':''}><span class="own-map-house">${svgIcon('home')}</span><strong>우리 집은 어디일까</strong><span>위치를 허용하면 여기에 표시돼요.</span></div><div class="own-map-status" role="status"><span data-home-status></span><div class="own-home-location-status"><span data-gps-status></span><div class="own-map-actions"><button class="gps-retry" data-action="gps-retry" hidden>위치 다시 확인</button><button data-action="cancel-start" hidden>취소</button></div></div></div><p class="own-tile-status" data-tile-status role="status" hidden></p></div><div class="own-today"><span>오늘 누운 시간</span><button data-action="history" aria-label="오늘의 눕기 기록 보기"><strong>${formatTime(total)}</strong>${svgIcon('arrow')}</button></div><div class="own-start-area">${primary('눕기','start')}<p>편하게 누워요. 시간은 눕런이 셀게요.</p></div>${warning()}${tabbar('home')}</section>`;
   }
   function counting() {
     return `<section class="app-screen nrc-countdown"><header class="app-header">${iconButton('close','cancel-countdown','취소')}</header><div class="countdown-wrap"><strong class="countdown-number" id="countdown" aria-live="polite">${countdown}</strong></div><button class="text-button" data-action="cancel-countdown">취소</button></section>`;
@@ -156,7 +174,7 @@
   const settingsHeader=(title,action='settings',done=false)=>`<header class="app-header">${done?'<span class="header-spacer"></span>':iconButton('back',action,'뒤로')}<h2>${title}</h2>${done?'<button data-action="home" class="nrc-text-action">완료</button>':'<span class="header-spacer"></span>'}</header>`;
   const switchRow=(label,action,on)=>`<div class="settings-row"><span>${label}</span><button class="switch" role="switch" aria-label="${label}" aria-checked="${!!on}" data-action="${action}"><span></span></button></div>`;
   function settings() {
-    return `<section class="app-screen nrc-shell own-settings nrc-settings settings">${topbar()}<h2 class="nrc-title">설정</h2><div class="own-settings-body"><h3>우리 집</h3><div class="own-setting-card"><button class="nrc-setting-link" data-action="setup-home" ${data.active?'disabled':''}><span>${svgIcon('home')} 집 위치</span><span>${data.home?'다시 확인':'확인하기'} ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">${data.active?'기록을 마치면 집 위치를 바꿀 수 있어요.':'지금 있는 곳을 집으로 확인해 주세요.'}</p><h3>소리와 화면</h3><div class="own-setting-card">${switchRow('음성 안내','sound',data.sound)}${switchRow('버튼 소리','effects',window.NooprunSFX?.state().enabled)}${switchRow('그림 자동 전환','art',window.NooprunArt.state().enabled)}<button class="nrc-setting-link" data-action="voice-preview"><span>목소리 들어보기</span>${svgIcon('sound')}</button><button class="nrc-setting-link" data-action="countSettings"><span>시작 전 준비 시간</span><span>${countSeconds}초 ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">집 위치와 기록은 이 기기에만 저장해요.<br>화면이 꺼지거나 다른 앱을 사용하면 위치 확인은 잠시 멈춰요.</p></div>${warning()}${tabbar('settings')}</section>`;
+    return `<section class="app-screen nrc-shell own-settings nrc-settings settings">${topbar()}<h2 class="nrc-title">설정</h2><div class="own-settings-body"><h3>우리 집</h3><div class="own-setting-card"><button class="nrc-setting-link" data-action="setup-home" ${data.active?'disabled':''}><span>${svgIcon('home')} 집 위치</span><span>${data.home?'변경':'확인하기'} ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">${data.active?'기록을 마치면 집 위치를 바꿀 수 있어요.':'집에 있을 때 현재 위치로 변경할 수 있어요.'}</p><h3>소리와 화면</h3><div class="own-setting-card">${switchRow('음성 안내','sound',data.sound)}${switchRow('버튼 소리','effects',window.NooprunSFX?.state().enabled)}${switchRow('그림 자동 전환','art',window.NooprunArt.state().enabled)}<button class="nrc-setting-link" data-action="voice-preview"><span>목소리 들어보기</span>${svgIcon('sound')}</button><button class="nrc-setting-link" data-action="countSettings"><span>시작 전 준비 시간</span><span>${countSeconds}초 ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">집 위치와 기록은 이 기기에 저장해요. 지도 표시를 위해 주변 지도 영역을 OpenStreetMap에 요청해요.<br>화면이 꺼지거나 다른 앱을 사용하면 위치 확인은 잠시 멈춰요.</p></div>${warning()}${tabbar('settings')}</section>`;
   }
   function countSettings(){return `<section class="app-screen own-settings nrc-settings">${settingsHeader('준비 시간')}<p class="own-setting-note">편하게 누울 시간을 정해요.</p><div class="own-setting-card">${[3,6,9].map(n=>`<button class="nrc-setting-link" data-count-seconds="${n}"><span>${n}초</span><span class="nrc-radio ${countSeconds===n?'selected':''}"></span></button>`).join('')}</div></section>`;}
   function showPanel(title,body) {
@@ -177,8 +195,10 @@
     $('#phone').dataset.view=view;
     $('#phone').dataset.sessionPage=sessionPage;
     $('#phone').dataset.runState=view==='running'?active().status:'';
-    const views={home,countdown:counting,running,complete:completed,share:shareView,history:historyView,settings,homeSetup,locating,countSettings};
+    const views={home,countdown:counting,running,complete:completed,share:shareView,history:historyView,settings,countSettings};
+    window.NooprunHomeMap.unmount();
     $('#app').innerHTML=views[view]();
+    if(view==='home')window.NooprunHomeMap.mount(data.home);
     window.NooprunArt.mount();
     if (photo&&view==='share')$('#result-card').style.backgroundImage=`url("${photo.url}")`;
     if (focus) {const target=$('#app h2')||$('#app .run-mode')||$('#app .countdown-wrap p');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}}
@@ -187,6 +207,7 @@
   }
   function clearPhoto() {photoToken++;if(photo)URL.revokeObjectURL(photo.url);photo=null;}
   function go(screen) {
+    if(gpsIntent==='start' || startAfterHome)stopGPS();
     if (data.active && screen==='home')screen='running';
     if (demoSession && screen!=='running')demoSession=null;
     if (!['complete','share'].includes(screen))clearPhoto();
@@ -200,7 +221,7 @@
       countdown--;
       if(countdown>0){$('#countdown').textContent=countdown;return;}
       clearInterval(countdownTimer);countdownTimer=null;
-      if(!gps.fix() || gpsState.status!=='inside'){gpsIntent='start';view='locating';render(true);return;}
+      if(!gps.fix() || gpsState.status!=='inside'){gpsIntent='start';view='home';render(true);return;}
       data.active={id:newID(),status:'running',baseMs:0,runSince:Date.now(),startedAt:Date.now(),goal:countdownGoal,demo:false,home:{...data.home},maxHomeDistance:0,gpsHadGaps:false};
       gpsIntent='session';gps.arm();
       persist();view='running';render(true);say('start');
@@ -234,7 +255,7 @@
     if(which==='complete'){result={id:'demo-result',elapsedMs:1800000,finishedAt:Date.now(),goal:0,mood:'',demo:true};view='complete';}
     render(true);
   }
-  function closeModal() {$('#modal')?.remove();$('#app').inert=false;modalAction=null;focusBeforeModal?.focus({preventScroll:true});}
+  function closeModal() {if(gpsIntent==='relocate')stopGPS();$('#modal')?.remove();$('#app').inert=false;modalAction=null;focusBeforeModal?.focus({preventScroll:true});}
   // A short tap never completes a session. Assistive activation uses a confirmation.
   function confirmFinish() {
     if(active()?.status!=='paused'||$('#modal'))return;
@@ -312,12 +333,12 @@
     },'image/png');
   }
 
-  const post='집에서 얼마나 뒹굴거렸는지 궁금해서 생각해본 앱.\n\n이름은 눕런.\n처음 켜면 지금 있는 곳을 집으로 확인하고\n눕기 시작 누르면 시간이 쌓여.\n\n누워서 폰 봐도 되고 게임해도 되고\n집 안을 왔다 갔다 해도 되고.\n밖으로 나가면 기록이 끝나는 거지.\n\n오늘 얼마나 집에서 뒹굴었는지\n사진에 얹어서 눕기 인증도 할 수 있어.';
+  const post='집에서 얼마나 뒹굴거렸는지 궁금해서 생각해본 앱.\n\n이름은 눕런.\n열자마자 지도에 우리 집이 보이고\n눕기 누르면 시간이 쌓여.\n\n누워서 폰 봐도 되고 게임해도 되고\n집 안을 왔다 갔다 해도 되고.\n밖으로 나가면 기록이 끝나는 거지.\n\n오늘 얼마나 집에서 뒹굴었는지\n사진에 얹어서 눕기 인증도 할 수 있어.';
   function note(name='experience') {
     document.querySelectorAll('[data-note]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.note===name)));
     const content={
-      experience:`<p class="note-kicker">01 / NOOPRUN</p><h2>오늘의 코스는,<br>집.</h2><p class="lede">집에서 얼마나 뒹굴거렸는지 궁금해서. 눕런은 집에 머문 시간을 기록해요.</p><ol class="flow"><li><strong>처음 열면 집 확인</strong>현재 위치를 찾고, ‘여기가 집이에요’를 눌러요.</li><li><strong>눕기 시작</strong>목표 없이 오늘의 시간이 쌓여요.</li><li><strong>밖에 나가면 종료</strong>위치 오차를 살피고 외출을 확인해요.</li><li><strong>오늘의 눕기 인증</strong>내 사진에 기록을 얹어 저장해요.</li></ol>`,
-      scope:`<p class="note-kicker">02 / OUR PLACE</p><h2>주소 대신,<br>지금 있는 곳.</h2><p class="lede">거리나 구역 크기를 고르지 않아요. 집에 있을 때 현재 위치만 확인하면 돼요.</p><h3>위치와 기록</h3><p class="lede">집 위치는 이 기기에만 저장해요. GPS 오차를 고려해 외출 여부를 확인하므로 현관을 넘는 순간까지 구분하지는 못해요.</p><p class="note-callout">웹 시안은 화면을 켜 둔 동안만 위치를 확인해요. 화면이 꺼지거나 다른 앱을 사용하는 동안 확인하지 못한 구간은 기록에 표시해요.</p>`,
+      experience:`<p class="note-kicker">01 / NOOPRUN</p><h2>오늘의 코스는,<br>집.</h2><p class="lede">집에서 얼마나 뒹굴거렸는지 궁금해서. 눕런은 집에 머문 시간을 기록해요.</p><ol class="flow"><li><strong>열자마자 우리 집 지도</strong>첫 사용 때 위치를 허용하면 집이 지도에 표시돼요.</li><li><strong>눕기</strong>목표 없이 오늘의 시간이 쌓여요.</li><li><strong>밖에 나가면 종료</strong>위치 오차를 살피고 외출을 확인해요.</li><li><strong>오늘의 눕기 인증</strong>내 사진에 기록을 얹어 저장해요.</li></ol>`,
+      scope:`<p class="note-kicker">02 / OUR PLACE</p><h2>주소 대신,<br>지금 있는 곳.</h2><p class="lede">거리나 구역 크기를 고르지 않아요. 집에서 앱을 열고 위치를 허용하면 현재 위치를 집으로 기억해요.</p><h3>위치와 기록</h3><p class="lede">집 위치는 이 기기에 저장해요. 지도를 그릴 때 주변 지도 영역을 OpenStreetMap에 요청해요. GPS 오차를 고려해 외출 여부를 확인하므로 현관을 넘는 순간까지 구분하지는 못해요.</p><p class="note-callout">웹 시안은 화면을 켜 둔 동안만 위치를 확인해요. 화면이 꺼지거나 다른 앱을 사용하는 동안 확인하지 못한 구간은 기록에 표시해요.</p>`,
       post:`<p class="note-kicker">03 / IDEA NOTE</p><h2>집에 있었던 시간도<br>기록이 된다면.</h2><textarea class="post-copy" id="post-copy" aria-label="게시글 초안">${esc(post)}</textarea><button class="copy-post" data-action="copy-post">글 복사 ↗</button>`
     };$('#note-content').innerHTML=content[name];
   }
@@ -348,13 +369,15 @@
     if(action==='native-share'){exportCard(true);return;}
     if(['home','history','settings','share','complete','countSettings'].includes(action)){go(action);return;}
     if(action==='start'){requestStart();return;}
-    if(action==='setup-home'){openSetup(view==='locating');return;}
+    if(action==='setup-home'){openSetup();return;}
+    if(action==='recenter-home'){if(data.home)window.NooprunHomeMap.recenter();else acquireInitialHome();return;}
+    if(action==='cancel-start'){stopGPS();updateGPS();return;}
     if(action==='cancel-gps'){stopGPS();go('home');return;}
-    if(action==='gps-retry'){gps.start(gpsIntent==='setup'?null:data.active?.home || data.home,{detectExit:gpsIntent==='session'});return;}
+    if(action==='gps-retry'){if(!data.home&&gpsIntent!=='relocate'){acquireInitialHome(startAfterHome);return;}gps.start(gpsIntent==='relocate'?null:data.active?.home || data.home,{detectExit:gpsIntent==='session'});return;}
     if(action==='save-home'){
       const fix=gps.fix();if(!fix || fix.accuracy>50)return;
-      data.home={latitude:fix.latitude,longitude:fix.longitude,accuracy:fix.accuracy,radius:fix.accuracy<=25?50:100,savedAt:Date.now()};persist();
-      stopGPS();if(setupThenStart)requestStart();else go('home');return;
+      if(gpsIntent!=='relocate')return;
+      saveHome(fix);closeModal();go('home');return;
     }
     if(action==='cancel-countdown'){cancelCountdown();return;}
     if(action==='art'){window.NooprunArt.toggle();render();$('[data-action=art]')?.focus({preventScroll:true});return;}
@@ -384,7 +407,7 @@
   new ResizeObserver(resize).observe($('.preview'));
   function resumeGPS(){
     if(data.active?.home){gpsIntent='session';gps.start(data.active.home);}
-    else if(gpsIntent==='setup')gps.start();
+    else if(['relocate','initial-home'].includes(gpsIntent))gps.start();
     else if(gpsIntent==='start')gps.start(data.home,{detectExit:false});
   }
   document.addEventListener('visibilitychange',()=>{
@@ -431,6 +454,6 @@
   };
   note();render();resize();
   if(data.active?.home){data.active.gpsHadGaps=true;persist();resumeGPS();}
-  else if(!data.active&&!data.home)openSetup(false);
+  else if(!data.active&&!data.home)acquireInitialHome();
   window.ready=document.fonts.ready;
 })();

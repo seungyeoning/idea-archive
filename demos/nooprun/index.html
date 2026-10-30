@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="location.css?v=home-gps-1">
   <link rel="stylesheet" href="archive-return.css">
   <link rel="stylesheet" href="nrc.css?v=nrc-mirror-1">
-  <link rel="stylesheet" href="own.css?v=own-1">
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="own.css?v=home-map-1">
 </head>
 <body>
   <a class="archive-return" href="../../#nooprun">← 아이디어 아카이브</a>
@@ -41,7 +42,7 @@
         <div id="app"></div>
         <div class="home-indicator" aria-hidden="true"></div>
       </div>
-      <p class="preview-caption">처음 열면 집 위치 확인 · 이 기기에만 저장<br>웹 시안은 화면을 켜 둔 동안 위치 확인</p>
+      <p class="preview-caption">열자마자 우리 집 지도 · 눕기로 기록 시작<br>웹 시안은 화면을 켜 둔 동안 위치 확인</p>
     </section>
 
     <section class="notebook" aria-label="눕런 상세 기획">
@@ -59,6 +60,8 @@
   <script src="art.js?v=home-gps-1"></script>
   <script src="voice.js?v=home-gps-1"></script>
   <script src="location.js?v=home-gps-1"></script>
-  <script src="app.js?v=own-1"></script>
+  <script src="vendor/leaflet.js"></script>
+  <script src="home-map.js?v=home-map-1"></script>
+  <script src="app.js?v=home-map-1"></script>
 </body>
 </html>
