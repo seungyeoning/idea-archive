@@ -65,7 +65,7 @@
     const button=e.target.closest('button, #photo-label');
     if(!button || button.disabled || button.getAttribute('aria-disabled')==='true' || !button.closest('#phone,.demo-tools,.note-tabs,.notebook'))return;
     const action=button.dataset.action;
-    if(action==='effects'||action==='confirm-finish')return;
+    if(action==='effects'||action==='confirm-finish'||action==='finish')return;
     if(action==='start')play('start');
     else if(action==='pause')play(window.nooprun?.state().active?.status==='paused'?'start':'pause');
     else if(action==='cancel-countdown'||action==='keep-resting')play('pause');
