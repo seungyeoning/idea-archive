@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafafa">
+  <meta name="description" content="문득 떠오른 아이디어를 앱과 게임으로 그려봅니다. 이 어플 어때?의 아이디어 아카이브.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="이 어플 어때? — 아이디어 아카이브">
+  <meta property="og:description" content="생각만 하긴, 아까워서. 앱과 게임으로 그려본 작은 아이디어들.">
+  <title>이 어플 어때? — 아이디어 아카이브</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#archive">아이디어 목록으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="이 어플 어때? 첫 화면"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="10" fill="currentColor"/><path d="M12 11.2c.4-2.8 5-3.4 7-1.2 2.7 3-1.8 4.5-2.5 6.4-.2.6-.2 1.2-.2 1.8" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16.2" cy="23" r="1.5" fill="white"/></svg><span>이 어플 어때?</span></a>
+      <nav aria-label="주 메뉴"><a href="#archive">아카이브</a><a href="#about">소개</a></nav>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <p class="eyebrow"><span class="small-orbit" aria-hidden="true"></span> 작고 새로운 생각들</p>
+      <h1 id="heroTitle">생각만 하긴,<br><span>아까워서.</span></h1>
+      <p class="hero-description">문득 떠오른 아이디어를<br class="mobile-break"> 앱과 게임으로 그려봅니다.</p>
+      <a class="text-link hero-link" href="#archive">아이디어 둘러보기 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13m-5-5 5 5 5-5"/></svg></a>
+      <div class="hero-stage" id="heroStage" aria-label="대표 아이디어 미리보기"></div>
+      <p class="hero-footnote">머릿속에만 있던 것들을, 하나씩 꺼내보는 중.</p>
+    </section>
+    <section class="archive-section section-width" id="archive" aria-labelledby="archiveTitle">
+      <div class="section-heading"><div><p class="section-kicker">THE ARCHIVE</p><h2 id="archiveTitle">어떤 아이디어가<br class="mobile-break"> 궁금하세요?</h2></div><p class="archive-intro">누르면 조금 더 자세히.<br>시안이 있는 아이디어는 직접 경험해보세요.</p></div>
+      <div class="archive-controls">
+        <div class="filter-group" role="group" aria-label="아이디어 분류">
+          <button type="button" data-filter="all" class="filter active" aria-pressed="true">전체 <span id="countAll">0</span></button>
+          <button type="button" data-filter="app" class="filter" aria-pressed="false">앱 <span id="countApp">0</span></button>
+          <button type="button" data-filter="game" class="filter" aria-pressed="false">게임 <span id="countGame">0</span></button>
+        </div>
+        <label class="search-box"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.5"/><path d="m13 13 4 4"/></svg><span class="sr-only">아이디어 검색</span><input id="searchInput" type="search" placeholder="아이디어 검색" autocomplete="off" spellcheck="false"><kbd aria-hidden="true">/</kbd></label>
+      </div>
+      <p id="resultStatus" class="sr-only" role="status" aria-live="polite"></p>
+      <div class="project-grid" id="projectGrid"></div>
+      <div class="empty-state" id="emptyState" hidden><span aria-hidden="true">⌕</span><h3>아직 없는 아이디어예요.</h3><p>다른 단어로 검색하거나 전체 목록을 살펴보세요.</p><button type="button" class="secondary-button" id="resetSearch">전체 아이디어 보기</button></div>
+      <noscript><p class="noscript-note">아이디어 목록과 시안을 보려면 브라우저에서 JavaScript를 켜주세요.</p></noscript>
+    </section>
+    <section class="about-section section-width" id="about" aria-labelledby="aboutTitle"><div class="about-mark" aria-hidden="true">?</div><div><p class="section-kicker">이 아카이브에 대하여</p><h2 id="aboutTitle">세상에 쓸데없는<br>아이디어는 없으니까.</h2><p>조금 불편했던 순간에서, 문득 재미있을 것 같은 상상에서.<br>앱과 게임의 가능성을 꺼내보는 작은 보관함입니다.</p><p class="about-note">이곳의 콘텐츠는 기획과 디자인 시안입니다.<br>출시 여부와 구현 범위는 각 아이디어에 따로 적어두었어요.</p></div></section>
+  </main>
+  <footer class="site-footer section-width"><a class="footer-brand" href="#top">이 어플 어때?</a><span>계속 쌓이는 아이디어 아카이브.</span><a href="#top" class="back-top">맨 위로 <span aria-hidden="true">↑</span></a></footer>
+  <dialog id="projectDialog" aria-labelledby="detailTitle">
+    <div class="detail-shell">
+      <button class="dialog-close" type="button" id="closeDetail" aria-label="아이디어 상세 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+      <div class="detail-media" id="detailMedia"><img id="detailCover" alt=""><video id="detailVideo" controls playsinline preload="none" hidden></video><button type="button" id="playVideo" class="play-video" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" stroke="none"/></svg> 소개영상 보기</button></div>
+      <div class="detail-body"><div class="detail-meta"><span id="detailCategory"></span><span id="detailStatus"></span></div><h2 id="detailTitle" tabindex="-1"></h2><p class="detail-tagline" id="detailTagline"></p><p class="detail-summary" id="detailSummary"></p><div class="detail-features" id="detailFeatures"></div><div class="detail-note" id="detailNote"></div><div class="detail-actions"><a id="detailDemo" class="primary-button" href="#">시안 열어보기 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a><button type="button" class="secondary-button" id="copyLink">링크 복사</button><span id="copyStatus" role="status" aria-live="polite"></span></div></div>
+    </div>
+  </dialog>
+</body>
+</html>

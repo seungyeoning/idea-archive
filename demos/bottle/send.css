@@ -1,0 +1,40 @@
+/* An interactive release ritual. The bottle responds to the hand, then to water. */
+.phone[data-screen=launch] .status{color:#f5efd9}
+.phone[data-screen=launch] .home-indicator{background:#91b0a5}
+.launch-screen{background:#112f38;color:#f5efd9;overflow:hidden;touch-action:pan-y}
+.launch-water{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.launch-head{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;height:65px;padding:0 21px}
+.launch-head>span{font-size:11px;letter-spacing:.08em;color:#becfc3}
+.launch-head .icon-button{color:#f5efd9}
+.launch-head .icon-button:hover{background:#ffffff0c}
+.launch-head svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.4}
+.launch-heading{position:absolute;top:139px;left:30px;right:25px;pointer-events:none;z-index:2}
+.launch-overline{display:flex;align-items:center;gap:9px;color:#d5dcac;font:10px/1.5 var(--sans);letter-spacing:.19em}
+.launch-overline:before{content:'';height:5px;width:5px;border-radius:50%;background:#d5dcac}
+.launch-heading h2{font:53px/1.17 var(--serif);letter-spacing:-.055em;margin:17px 0 0;font-weight:400}
+.launch-heading h2 em{font-style:normal;padding-left:30px}
+.launch-quote{position:absolute;top:318px;left:128px;width:134px;height:98px;background:#eee2c2;color:#70664e;padding:14px 15px;border-radius:2px;z-index:4;overflow:hidden;transform-origin:50% 70%;pointer-events:none}
+.launch-quote:after{content:'';position:absolute;right:0;top:0;width:7px;height:100%;background:#c9b88c88}
+.launch-quote span{font:10px/1.6 var(--serif);display:block;white-space:pre-line;max-height:60px;overflow:hidden}
+.launch-bottle{position:absolute;left:127px;top:386px;width:136px;height:204px;z-index:3;touch-action:none;background:transparent;padding:0;cursor:grab;transform-origin:50% 65%;will-change:transform;user-select:none;-webkit-user-select:none}
+.launch-bottle:active{opacity:1;cursor:grabbing}
+.launch-bottle:disabled{opacity:1;cursor:default}
+.launch-bottle svg{width:100%;height:100%;overflow:visible;pointer-events:none}
+.launch-bottle:focus-visible{outline:1px dashed #d5dcac;outline-offset:12px;border-radius:50%}
+.launch-bottle .bottle-cork{transform-box:fill-box;transform-origin:center}
+.launch-meta{position:absolute;left:30px;right:30px;top:616px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;border-top:1px solid #a9c4b328;z-index:2;color:#c3d3c4;font-size:11px;letter-spacing:.01em}
+.launch-meta span:last-child{color:#e1e5b3}
+.launch-footer{position:absolute;left:30px;right:30px;bottom:49px;z-index:4;text-align:center}
+.launch-hint{font:14px/1.7 var(--sans);min-height:24px;margin:0 0 11px;color:#dce4d3}
+.launch-release{background:#dce3b1;color:#173b3b;border-radius:50px;padding:0 21px;height:48px;min-width:180px;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:24px}
+.launch-release:hover{background:#eff1cb}
+.launch-release svg{height:18px;width:18px;fill:none;stroke:currentColor;stroke-width:1.4;transform:rotate(-45deg)}
+.launch-footer small{display:block;font-size:10px;color:#b2c8bc;margin-top:12px;letter-spacing:.02em}
+.launch-screen[data-phase=packing] .launch-release{visibility:hidden}
+.launch-screen[data-phase=releasing] .launch-release,.launch-screen[data-phase=arriving] .launch-release{visibility:hidden}
+.phone.map-arriving{background:#112f38}
+.phone.map-arriving .map-screen{animation:shore-reveal .8s cubic-bezier(.2,.7,.2,1) both}
+.phone.map-arriving .map-base{animation:shore-reveal .8s ease both}
+@keyframes shore-reveal{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.phone.map-arriving .map-screen,.phone.map-arriving .map-base{animation:none}}
+@media(max-width:820px){.scene-nav button{padding-left:3px;padding-right:3px;font-size:11px}}

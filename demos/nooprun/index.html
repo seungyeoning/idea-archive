@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>눕런 — 오늘도, 가만히 완주.</title>
+  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="archive-return.css"></head>
+<body>
+  <header class="masthead">
+    <a href="../../" class="studio-link">작은 생각들 <span>↖ 아이디어 노트</span></a>
+    <span class="edition">05 / NOOP RUN CLUB</span>
+  </header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">눕런 · 인터랙티브 기획 시안</p>
+      <h1>오늘도,<br>가만히 완주.</h1>
+      <p class="intro-copy">누워서 쉰 시간을 러닝 기록처럼.<br>아무 데도 가지 않았지만,<br>오늘의 완주 기록은 남았으니까.</p>
+      <div class="manifesto"><span>THE ONLY PACE</span><strong>YOUR OWN.</strong></div>
+      <p class="prototype-note">계획 중인 앱의 HTML 시안이에요.<br>이 브라우저에서 타이머와 기록을 체험할 수 있어요.</p>
+      <div class="demo-tools" aria-label="시안 장면">
+        <button data-demo="home">시작 화면</button>
+        <button data-demo="running">빈둥 중</button>
+        <button data-demo="complete">30분 완주 예시</button>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="눕런 앱 시안">
+      <div class="phone" id="phone" data-view="home">
+        <div class="status"><span>9:41</span><span aria-hidden="true">▮▮▮ &nbsp; ▰</span></div>
+        <div id="app"></div>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+      <p class="preview-caption">실제 운동량을 측정하지 않는 빈둥 기록 · 시연 기록은 따로 표시</p>
+    </section>
+
+    <section class="notebook" aria-label="눕런 상세 기획">
+      <nav class="note-tabs" aria-label="기획 내용">
+        <button data-note="experience" aria-pressed="true">핵심 경험</button>
+        <button data-note="scope" aria-pressed="false">첫 버전</button>
+        <button data-note="post" aria-pressed="false">반응 글</button>
+      </nav>
+      <article id="note-content"></article>
+    </section>
+  </main>
+  <footer class="footer"><span>NOOPRUN / 기획 및 화면 시안</span><a href="../../#nooprun">상세 기획 보기 ↗</a><span>2026.10.27</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+<a class="archive-return" href="../../" aria-label="이 어플 어때? 아카이브로 돌아가기">← 아카이브</a></body>
+</html>

@@ -1,0 +1,22 @@
+Third-party notices for archived concept demos
+
+Leaflet 1.9.4: BSD-2-Clause.
+License copies: travel/assets/LEAFLET-LICENSE.txt and bottle/assets/Leaflet-LICENSE.txt.
+https://leafletjs.com/
+
+OpenStreetMap: the travel demo requests public tiles from tile.openstreetmap.org.
+Map attribution remains visible in the demo.
+https://www.openstreetmap.org/copyright
+
+Natural Earth public-domain map data: the bottle demo uses reduced GeoJSON geometry,
+not live GPS, ocean-current data, or user locations.
+https://www.naturalearthdata.com/about/terms-of-use/
+
+Gowun Batang: SIL Open Font License.
+License copies: musubi/assets/GowunBatang-OFL.txt and bottle/assets/GowunBatang-OFL.txt.
+
+Klee One example subset: SIL Open Font License.
+License copy: japanese/assets/KLEE-OFL.txt.
+
+The local travel draft's unverified font file is not redistributed in this public package.
+Concept visuals and demo source are retained from the owner's prototypes.
