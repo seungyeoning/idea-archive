@@ -62,8 +62,8 @@
       position=L.marker(coordinate,{icon,keyboard:false,interactive:false,zIndexOffset:100}).addTo(map);
     }else position.setLatLng(coordinate);
     position.getElement()?.classList.remove('is-stale');
-    const label=document.querySelector('[data-session-position-label]');if(label)label.textContent=isExample?'현재 위치 예시':'현재 위치';
-    const accuracy=document.querySelector('[data-session-accuracy]');if(accuracy)accuracy.textContent=`오차 약 ${Math.round(fix.accuracy)}m${isExample?' · 예시':''}`;
+    const label=document.querySelector('[data-session-position-label]');if(label)label.textContent='현재 위치';
+    const accuracy=document.querySelector('[data-session-accuracy]');if(accuracy)accuracy.textContent=`오차 약 ${Math.round(fix.accuracy)}m`;
     const caption=document.querySelector('[data-session-map-caption]');if(caption)caption.textContent=isExample?'서울시청 주변 지도 예시 · 실제 위치 아님':'파란 원은 위치 오차예요.';
     const element=map.getContainer();element.dataset.positionState=isExample?'example':'live';
     element.setAttribute('aria-label',isExample?'서울시청 주변의 지도 시연. 실제 위치가 아니에요.':'집 주변 지도. 집 표시와 현재 위치점, GPS 오차 범위. 방향키로 이동하고 더하기와 빼기로 확대하거나 축소할 수 있어요.');
