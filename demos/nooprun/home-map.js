@@ -16,7 +16,7 @@
     provisional=approximate;
     home=[savedHome.latitude,savedHome.longitude];
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-    map=L.map(element,{zoomControl:false,scrollWheelZoom:false,attributionControl:true,zoomAnimation:!reduced,fadeAnimation:!reduced,markerZoomAnimation:!reduced}).setView(home,approximate?14:17);
+    map=L.map(element,{zoomControl:false,scrollWheelZoom:false,attributionControl:true,zoomAnimation:!reduced,fadeAnimation:!reduced,markerZoomAnimation:false,minZoom:approximate?3:15,maxZoom:19}).setView(home,approximate?14:19);
     map.attributionControl.setPrefix(false);
     tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
       maxZoom:19,minZoom:3,
@@ -30,12 +30,24 @@
       if(status){status.hidden=!failed;status.textContent=failed?'지도를 불러오지 못했어요. 연결을 확인하고 우리 집을 눌러 주세요.':'';}
     });
     tiles.addTo(map);
-    const range=L.circle(home,{radius:approximate?savedHome.accuracy:savedHome.radius,color:approximate?'#3780e8':'#89965d',weight:1,opacity:.5,fillColor:approximate?'#3780e8':'#e4ff3b',fillOpacity:.09,interactive:false}).addTo(map);
-    if(approximate)map.fitBounds(range.getBounds(),{padding:[30,30],maxZoom:16,animate:false});
-    const house=L.divIcon({className:'home-position-marker',iconSize:[58,58],iconAnchor:[29,29],
-      html:'<span class="home-position-halo"></span><span class="home-position-dot"></span>'});
-    L.marker(home,{icon:house,keyboard:false,interactive:false}).addTo(map);
-    map.panBy([0,Math.round(element.clientHeight*.06)],{animate:false});
+    if(approximate){
+      const range=L.circle(home,{radius:savedHome.accuracy,color:'#277be7',weight:1,opacity:.55,fillColor:'#277be7',fillOpacity:.12,interactive:false}).addTo(map);
+      map.fitBounds(range.getBounds(),{padding:[30,30],maxZoom:16,animate:false});
+      const dot=L.divIcon({className:'session-position-marker',iconSize:[20,20],iconAnchor:[10,10],html:'<span></span>'});
+      L.marker(home,{icon:dot,keyboard:false,interactive:false}).addTo(map);
+    }else{
+      const house=L.divIcon({className:'session-home-marker',iconSize:[38,44],iconAnchor:[19,44],
+        html:'<span class="session-home-pin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 9v11h5v-6h4v6h5V9"/></svg></span>'});
+      L.marker(home,{icon:house,keyboard:false,interactive:false,zIndexOffset:50}).addTo(map);
+    }
+    const mountedMap=map;
+    const syncControls=()=>{
+      if(map!==mountedMap)return;
+      const plus=document.querySelector('[data-action=home-map-in]'),minus=document.querySelector('[data-action=home-map-out]');
+      if(plus)plus.disabled=map.getZoom()>=map.getMaxZoom();
+      if(minus)minus.disabled=map.getZoom()<=map.getMinZoom();
+    };
+    map.on('zoomend',syncControls);syncControls();
     element.setAttribute('role','region');
     element.setAttribute('aria-label',approximate?'대략적인 현재 위치. 원은 위치 오차이며 아직 집으로 저장되지 않았어요.':'저장된 우리 집 위치 지도. 방향키로 이동하고 더하기와 빼기로 확대하거나 축소할 수 있어요.');
     resizeObserver=new ResizeObserver(()=>map?.invalidateSize({pan:false}));
@@ -43,9 +55,8 @@
   }
   function recenter() {
     if(!map||!home)return;
-    map.setView(home,provisional?map.getZoom():17,{animate:false});
-    map.panBy([0,Math.round(map.getContainer().clientHeight*.06)],{animate:false});
+    map.setView(home,provisional?map.getZoom():19,{animate:false});
     if(!document.querySelector('[data-tile-status]')?.hidden)tiles.redraw();
   }
-  window.NooprunHomeMap={mount,unmount,recenter,showApproximate:fix=>mount(fix,true)};
+  window.NooprunHomeMap={mount,unmount,recenter,zoom:direction=>{if(map)map.setZoom(map.getZoom()+direction,{animate:false});},showApproximate:fix=>mount(fix,true)};
 })();

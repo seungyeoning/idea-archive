@@ -1,12 +1,12 @@
 /* Recording is a full-bleed map. All chrome floats above it. */
-.phone[data-view=running][data-run-state]:not([data-session-page=settings]) #app {
+:is(.phone[data-view=home],.phone[data-view=running][data-run-state]:not([data-session-page=settings])) #app {
   position:absolute;inset:0;height:100%;overflow:hidden;
 }
-.phone[data-view=running][data-run-state]:not([data-session-page=settings]) .status {
+:is(.phone[data-view=home],.phone[data-view=running][data-run-state]:not([data-session-page=settings])) .status {
   position:absolute;inset:0 0 auto;height:48px;z-index:4;pointer-events:none;
 }
-.phone[data-view=running][data-run-state]:not([data-session-page=settings]) .home-indicator {z-index:4}
-.running.own-session.with-live-map {
+:is(.phone[data-view=home],.phone[data-view=running][data-run-state]:not([data-session-page=settings])) .home-indicator {z-index:4}
+.own-session.with-live-map:is(.home,.running) {
   position:relative;height:100%;min-height:100%;padding:52px 25px 28px;
   background:transparent;color:#111;isolation:isolate;pointer-events:none;
 }
@@ -29,13 +29,6 @@
 .with-live-map .session-map-card {position:absolute;inset:0;z-index:0;margin:0;pointer-events:auto}
 .with-live-map .session-map-viewport {height:100%;border:0;border-radius:0;isolation:isolate}
 .with-live-map .session-live-map .leaflet-tile-pane {filter:saturate(.52)}
-.with-live-map .session-map-heading {
-  position:absolute;left:25px;bottom:204px;z-index:2;display:flex;flex-direction:column;
-  align-items:flex-start;gap:4px;padding:9px 12px;border:1px solid #ffffffcc;
-  border-radius:12px;background:#ffffffeb;pointer-events:none;
-}
-.with-live-map .session-map-heading > span {font-size:10px;color:#61655f}
-.with-live-map .session-map-legend {position:absolute;left:27px;bottom:181px;z-index:2;margin:0;gap:12px;pointer-events:none}
 .with-live-map .session-map-controls {top:43%;right:17px;border-radius:24px;box-shadow:0 2px 10px #00000008}
 .with-live-map .session-map-home {top:calc(43% + 100px);right:17px;bottom:auto;min-width:44px;width:44px;height:44px;border-radius:50%;padding:0}
 .with-live-map .session-map-home span {display:none}
@@ -50,8 +43,16 @@
 .with-live-map[data-paused=true] .own-pause {background:#e4ff3b;color:#111}
 .with-live-map .session-action > span {font-size:11px;font-weight:650;color:#222;line-height:20px}
 .with-live-map .own-session-copy {position:absolute;left:20px;right:20px;bottom:186px;margin:0;font-size:12px;color:#222}
-.with-live-map[data-paused=true] .session-map-heading {bottom:235px}
-.with-live-map[data-paused=true] .session-map-legend {bottom:212px}
 .with-live-map .own-session-footer {min-height:25px;margin-top:8px;justify-content:center;flex-shrink:0}
 .with-live-map .own-session-footer > span {color:#555b52;font-size:9px}
 .with-live-map .storage-warning {position:absolute;top:275px;left:20px;right:75px;font-size:10px;pointer-events:auto}
+
+/* Home and recording share one map surface and fixed control positions. */
+.map-lobby .home-total {margin:0;background:none;border:0;width:100%;flex-shrink:0;padding:9px 0 0}
+.map-lobby .lobby-start {background:#e4ff3b;color:#111;font-size:17px;font-weight:750}
+.with-live-map .home-history-shortcut {position:absolute;left:25px;bottom:75px;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:44px;min-height:54px;padding:5px;color:#555b52}
+.home-history-shortcut svg {width:21px;height:21px}.home-history-shortcut span {font-size:10px}
+.map-lobby .own-map-status {position:absolute;top:auto;bottom:196px;left:25px;right:25px;padding:12px;background:#fffffff2;border-color:#e7e9e1;pointer-events:auto;color:#444}
+.map-lobby .own-map-status:has(.own-home-location-status[hidden]) {display:none}
+.map-lobby .own-home-location-status [data-gps-status] {font-size:12px}
+.with-live-map .own-session-footer [data-status=inside],.with-live-map .own-session-footer [data-status=ready] {display:none}

@@ -43,7 +43,7 @@ window.ARCHIVE_ITEMS = [
     id: 'nooprun', title: '눕런', category: 'app',
     tagline: '오늘의 코스는, 집.',
     summary: '집에서 얼마나 뒹굴거렸는지 기록하는 집순이·집돌이용 앱. 집 주변 지도와 함께 눕는 시간을 재고, 잠깐 움직일 땐 일시정지해요.',
-    status: '조작 시안', theme: '#f5f5f7', cover: 'assets/nooprun-poses.png', demo: 'demos/nooprun/?v=map-overlay-1', video: 'assets/nooprun.mp4?v=map-overlay-1',
+    status: '조작 시안', theme: '#f5f5f7', cover: 'assets/nooprun-poses.png', demo: 'demos/nooprun/?v=map-lobby-1', video: 'assets/nooprun.mp4?v=map-lobby-1',
     features: ['눕기 타이머 · 집 주변 GPS 지도', '잠깐 움직이기 · 다시 눕기 · 길게 눌러 종료', '사진으로 눕기 인증'],
     note: '기획 중인 앱의 HTML 화면과 시연영상입니다. 영상의 위치는 서울시청 테스트 좌표예요. 웹 위치 확인은 화면이 켜진 동안 동작하며, GPS로 방 사이 이동을 구분하지는 않아요.', updated: '2026-10-31'
   },
