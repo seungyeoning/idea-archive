@@ -1,0 +1,57 @@
+/* Recording is a full-bleed map. All chrome floats above it. */
+.phone[data-view=running][data-run-state]:not([data-session-page=settings]) #app {
+  position:absolute;inset:0;height:100%;overflow:hidden;
+}
+.phone[data-view=running][data-run-state]:not([data-session-page=settings]) .status {
+  position:absolute;inset:0 0 auto;height:48px;z-index:4;pointer-events:none;
+}
+.phone[data-view=running][data-run-state]:not([data-session-page=settings]) .home-indicator {z-index:4}
+.running.own-session.with-live-map {
+  position:relative;height:100%;min-height:100%;padding:52px 25px 28px;
+  background:transparent;color:#111;isolation:isolate;pointer-events:none;
+}
+.with-live-map .session-live-map::after {
+  content:"";position:absolute;inset:0;z-index:450;pointer-events:none;
+  background:linear-gradient(180deg,#fffffff5 0%,#ffffffed 23%,#ffffff00 43%,#ffffff00 63%,#ffffffe8 85%,#fffffff5 100%);
+}
+.with-live-map > :not(.session-map-card) {position:relative;z-index:2}
+.with-live-map button,.with-live-map a {pointer-events:auto}
+.with-live-map .app-header {flex-shrink:0}
+.with-live-map .nrc-plain-icon {margin:0;border:1px solid #0000000d;border-radius:50%;background:#ffffffeb}
+.with-live-map .own-session-status {padding:9px 12px;background:#ffffffeb;border-radius:24px;font-size:12px}
+.with-live-map .own-session-status i {background:#a4b72c}
+.with-live-map[data-paused=true] .own-session-status i {background:#999}
+.with-live-map .own-live-header {margin-top:21px;color:#5d625b;font-size:11px}
+.with-live-map .own-timer {padding-top:9px;gap:3px}
+.with-live-map .own-timer .timer {font-size:80px;letter-spacing:-4px;color:#111}
+.with-live-map .own-timer .timer.long {font-size:54px;letter-spacing:-3px}
+.with-live-map .own-timer > span {color:#535950;font-size:12px}
+.with-live-map .session-map-card {position:absolute;inset:0;z-index:0;margin:0;pointer-events:auto}
+.with-live-map .session-map-viewport {height:100%;border:0;border-radius:0;isolation:isolate}
+.with-live-map .session-live-map .leaflet-tile-pane {filter:saturate(.52)}
+.with-live-map .session-map-heading {
+  position:absolute;left:25px;bottom:204px;z-index:2;display:flex;flex-direction:column;
+  align-items:flex-start;gap:4px;padding:9px 12px;border:1px solid #ffffffcc;
+  border-radius:12px;background:#ffffffeb;pointer-events:none;
+}
+.with-live-map .session-map-heading > span {font-size:10px;color:#61655f}
+.with-live-map .session-map-legend {position:absolute;left:27px;bottom:181px;z-index:2;margin:0;gap:12px;pointer-events:none}
+.with-live-map .session-map-controls {top:43%;right:17px;border-radius:24px;box-shadow:0 2px 10px #00000008}
+.with-live-map .session-map-home {top:calc(43% + 100px);right:17px;bottom:auto;min-width:44px;width:44px;height:44px;border-radius:50%;padding:0}
+.with-live-map .session-map-home span {display:none}
+.with-live-map .session-map-home svg {width:19px;height:19px}
+.with-live-map .leaflet-bottom.leaflet-right {bottom:5px;right:7px;z-index:3}
+.with-live-map .leaflet-control-attribution {font-size:8px;background:#ffffffd9;border-radius:4px}
+.with-live-map .session-tile-error {bottom:285px;left:25px;right:75px}
+.with-live-map .own-session-controls {margin-top:auto;gap:42px;padding-top:0;padding-bottom:0;flex-shrink:0}
+.with-live-map .session-action {width:80px;gap:9px}
+.with-live-map .own-pause,.with-live-map .own-end {width:80px;height:80px;min-height:80px;box-shadow:0 3px 12px #00000010}
+.with-live-map .own-pause {background:#111;color:#e4ff3b}
+.with-live-map[data-paused=true] .own-pause {background:#e4ff3b;color:#111}
+.with-live-map .session-action > span {font-size:11px;font-weight:650;color:#222;line-height:20px}
+.with-live-map .own-session-copy {position:absolute;left:20px;right:20px;bottom:186px;margin:0;font-size:12px;color:#222}
+.with-live-map[data-paused=true] .session-map-heading {bottom:235px}
+.with-live-map[data-paused=true] .session-map-legend {bottom:212px}
+.with-live-map .own-session-footer {min-height:25px;margin-top:8px;justify-content:center;flex-shrink:0}
+.with-live-map .own-session-footer > span {color:#555b52;font-size:9px}
+.with-live-map .storage-warning {position:absolute;top:275px;left:20px;right:75px;font-size:10px;pointer-events:auto}
