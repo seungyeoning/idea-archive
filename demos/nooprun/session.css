@@ -118,3 +118,6 @@
 .share-editor .photo-preview .card-top,.share-editor .photo-preview .card-desc,.share-editor .photo-preview .card-footer span{color:#fff}
 .share-editor .photo-preview .card-rule{border-color:#fff5}
 .share-caption{font-size:.75rem;line-height:1.7;color:#666;text-align:center;margin-top:15px}
+
+/* One result image, reused on its certification card. */
+.share-editor .share-record-art{display:block;width:100%;height:112px;margin:8px 0 0}.share-editor .share-record-art img{position:static;width:100%;height:100%;object-fit:contain}.share-editor .card-time{margin-top:28px}.share-editor .card-rule{margin-top:12px}

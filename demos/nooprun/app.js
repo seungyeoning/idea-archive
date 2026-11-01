@@ -169,13 +169,13 @@
   }
   function sessionSettings(){return `<section class="app-screen own-settings nrc-settings"><header class="app-header"><button class="nrc-plain-icon" data-session-page="metrics" aria-label="기록으로 돌아가기">${svgIcon('back')}</button><h2>기록 설정</h2><span class="header-spacer"></span></header><div class="own-setting-card">${switchRow('음성 안내','sound',data.sound)}${switchRow('버튼 소리','effects',window.NooprunSFX?.state().enabled)}${switchRow('화면 잠금','screen-lock',screenLocked)}</div><p class="own-setting-note">잠깐 이동할 땐 일시정지하고, 돌아오면 이어서 누워요.<br>웹 시안은 방 사이 이동을 자동 감지하지 않아요. GPS로 집 주변 이탈이 확인되면 일시정지해요.</p><button class="own-primary own-return" data-session-page="metrics"><strong data-elapsed>${formatTime(elapsed())}</strong> · 기록으로 돌아가기</button></section>`;}
   function card(r) {
-    return `<div class="result-card${photo?' photo-preview':''}" id="result-card"><div class="card-top"><span>NOOPRUN</span><span>${dateLabel(r.finishedAt)}</span></div><strong class="card-time${r.elapsedMs>=3600000?' long':''}">${formatTime(r.elapsedMs)}</strong><p class="card-desc">눕기 시간</p><hr class="card-rule"><div class="card-footer"><div><strong class="own-card-end">오늘도 잘 누웠다.</strong></div><span>눕런<br>오늘은 여기까지.</span></div></div>`;
+    return `<div class="result-card${photo?' photo-preview':''}" id="result-card"><div class="card-top"><span>NOOPRUN</span><span>${dateLabel(r.finishedAt)}</span></div><strong class="card-time${r.elapsedMs>=3600000?' long':''}">${formatTime(r.elapsedMs)}</strong><p class="card-desc">눕기 시간</p>${photo?'':window.NooprunArt.markup('share-record-art',window.NooprunArt.forRecord(r))}<hr class="card-rule"><div class="card-footer"><div><strong class="own-card-end">오늘도 잘 누웠다.</strong></div><span>눕런<br>오늘은 여기까지.</span></div></div>`;
   }
   function completed() {
     if (!result) {view='home';return home();}
     const hour=new Date(result.finishedAt).getHours(),period=hour<6?'새벽':hour<12?'오전':hour<18?'오후':'저녁';
     const clock=new Intl.DateTimeFormat('ko-KR',{hour:'numeric',minute:'2-digit',hour12:false}).format(result.finishedAt),weekday=new Intl.DateTimeFormat('ko-KR',{weekday:'long'}).format(result.finishedAt);
-    return `<section class="app-screen complete own-detail"><header class="app-header">${iconButton('back','history','기록으로 돌아가기')}<span>눕기 기록</span><button class="nrc-plain-icon nrc-more" data-action="record-menu" aria-label="더 보기">•••</button></header><p class="record-date">${dateLabel(result.finishedAt)} · ${clock}</p><h2>${esc(result.title||weekday+' '+period+' 눕기')}<button data-action="edit-record" aria-label="기록 제목 편집">${svgIcon('edit')}</button></h2><div class="own-summary"><span>오늘도 잘 누웠다.</span><strong>${formatTime(result.elapsedMs)}</strong><small>눕기 시간</small></div>${window.NooprunArt.markup('own-result-art')}${result.gpsHadGaps?'<p class="exit-reason">위치를 확인하지 못한 구간이 포함돼 있어요.</p>':''}<button class="nrc-detail-row" data-action="feeling">쉬고 나니 어때요?<span>${esc(result.mood||'선택하기')}</span></button><div class="result-actions">${primary('눕기 인증하기','share')}${primary('완료','home','paper')}</div>${result.demo?'':'<p class="saved-indicator">이 기기에 저장됐어요</p>'}</section>`;
+    return `<section class="app-screen complete own-detail"><header class="app-header">${iconButton('back','history','기록으로 돌아가기')}<span>눕기 기록</span><button class="nrc-plain-icon nrc-more" data-action="record-menu" aria-label="더 보기">•••</button></header><p class="record-date">${dateLabel(result.finishedAt)} · ${clock}</p><h2>${esc(result.title||weekday+' '+period+' 눕기')}<button data-action="edit-record" aria-label="기록 제목 편집">${svgIcon('edit')}</button></h2><div class="own-summary"><span>오늘도 잘 누웠다.</span><strong>${formatTime(result.elapsedMs)}</strong><small>눕기 시간</small></div>${window.NooprunArt.markup('own-result-art',window.NooprunArt.forRecord(result))}${result.gpsHadGaps?'<p class="exit-reason">위치를 확인하지 못한 구간이 포함돼 있어요.</p>':''}<button class="nrc-detail-row" data-action="feeling">쉬고 나니 어때요?<span>${esc(result.mood||'선택하기')}</span></button><div class="result-actions">${primary('눕기 인증하기','share')}${primary('완료','home','paper')}</div>${result.demo?'':'<p class="saved-indicator">이 기기에 저장됐어요</p>'}</section>`;
   }
   function shareView() {
     if(!result){view='home';return home();}
@@ -200,7 +200,7 @@
   const settingsHeader=(title,action='settings',done=false)=>`<header class="app-header">${done?'<span class="header-spacer"></span>':iconButton('back',action,'뒤로')}<h2>${title}</h2>${done?'<button data-action="home" class="nrc-text-action">완료</button>':'<span class="header-spacer"></span>'}</header>`;
   const switchRow=(label,action,on)=>`<div class="settings-row"><span>${label}</span><button class="switch" role="switch" aria-label="${label}" aria-checked="${!!on}" data-action="${action}"><span></span></button></div>`;
   function settings() {
-    return `<section class="app-screen club-page club-settings own-settings nrc-settings settings">${pageHeader('설정')}<div class="own-settings-body"><h3>우리 집</h3><div class="own-setting-card"><button class="nrc-setting-link" data-action="setup-home" ${data.active?'disabled':''}><span>${svgIcon('home')} 집 위치</span><span>${data.home?'변경':'확인하기'} ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">${data.active?'기록을 마치면 집 위치를 바꿀 수 있어요.':'집에 있을 때 현재 위치로 변경할 수 있어요.'}</p><h3>소리와 화면</h3><div class="own-setting-card">${switchRow('음성 안내','sound',data.sound)}${switchRow('버튼 소리','effects',window.NooprunSFX?.state().enabled)}${switchRow('그림 자동 전환','art',window.NooprunArt.state().enabled)}<button class="nrc-setting-link" data-action="voice-preview"><span>목소리 들어보기</span>${svgIcon('sound')}</button><button class="nrc-setting-link" data-action="countSettings"><span>시작 전 준비 시간</span><span>${countSeconds}초 ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">집 위치와 기록은 이 기기에 저장해요. 지도 표시를 위해 주변 지도 영역을 OpenStreetMap에 요청해요.<br>화면이 꺼지거나 다른 앱을 사용하면 위치 확인은 잠시 멈춰요.</p></div>${warning()}${tabbar('settings')}</section>`;
+    return `<section class="app-screen club-page club-settings own-settings nrc-settings settings">${pageHeader('설정')}<div class="own-settings-body"><h3>우리 집</h3><div class="own-setting-card"><button class="nrc-setting-link" data-action="setup-home" ${data.active?'disabled':''}><span>${svgIcon('home')} 집 위치</span><span>${data.home?'변경':'확인하기'} ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">${data.active?'기록을 마치면 집 위치를 바꿀 수 있어요.':'집에 있을 때 현재 위치로 변경할 수 있어요.'}</p><h3>소리와 화면</h3><div class="own-setting-card">${switchRow('음성 안내','sound',data.sound)}${switchRow('버튼 소리','effects',window.NooprunSFX?.state().enabled)}<button class="nrc-setting-link" data-action="voice-preview"><span>목소리 들어보기</span>${svgIcon('sound')}</button><button class="nrc-setting-link" data-action="countSettings"><span>시작 전 준비 시간</span><span>${countSeconds}초 ${svgIcon('arrow')}</span></button></div><p class="own-setting-note">집 위치와 기록은 이 기기에 저장해요. 지도 표시를 위해 주변 지도 영역을 OpenStreetMap에 요청해요.<br>화면이 꺼지거나 다른 앱을 사용하면 위치 확인은 잠시 멈춰요.</p></div>${warning()}${tabbar('settings')}</section>`;
   }
   function countSettings(){return `<section class="app-screen own-settings nrc-settings">${settingsHeader('준비 시간')}<p class="own-setting-note">편하게 누울 시간을 정해요.</p><div class="own-setting-card">${[3,6,9].map(n=>`<button class="nrc-setting-link" data-count-seconds="${n}"><span>${n}초</span><span class="nrc-radio ${countSeconds===n?'selected':''}"></span></button>`).join('')}</div></section>`;}
   function showPanel(title,body) {
@@ -287,7 +287,7 @@
   }
   function finish({silent=false,reason='manual',confirmedAt=Date.now()}={}) {
     const s=active();if(!s)return;
-    result={id:s.id,elapsedMs:elapsed(s),finishedAt:confirmedAt,goal:s.goal,mood:'',demo:!!s.demo,endReason:reason,homeRadius:s.home?.radius || null,maxHomeDistance:s.maxHomeDistance || 0,gpsHadGaps:!!s.gpsHadGaps};
+    result={id:s.id,artId:s.demo?'bed-phone':window.NooprunArt.choose(),elapsedMs:elapsed(s),finishedAt:confirmedAt,goal:s.goal,mood:'',demo:!!s.demo,endReason:reason,homeRadius:s.home?.radius || null,maxHomeDistance:s.maxHomeDistance || 0,gpsHadGaps:!!s.gpsHadGaps};
     if(!s.demo){stopGPS();closeModal();}
     if(!s.demo){if(!data.records.some(r=>r.id===result.id))data.records.push({...result});data.active=null;persist();}
     demoSession=null;demoClockMs=null;screenLocked=false;sessionPage='metrics';view='complete';clearPhoto();render(true);if(!silent){window.NooprunSFX?.play('complete');say('complete');}
@@ -376,7 +376,7 @@
     img.onload=()=>{if(token!==photoToken||!['share','complete'].includes(view)){URL.revokeObjectURL(url);return;}photo={url,img};if(view==='share')render();toast('사진은 이 창에서만 사용하고 업로드하지 않아요.');};
     img.onerror=()=>{URL.revokeObjectURL(url);toast('사진을 읽지 못했어요. JPG나 PNG로 다시 골라 주세요.');};img.src=url;
   }
-  function exportCard(share=false) {
+  async function exportCard(share=false) {
     if(!result)return;
     const r={...result},canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1200;const c=canvas.getContext('2d');
     c.fillStyle='#e4ff3b';c.fillRect(0,0,1080,1200);
@@ -384,6 +384,7 @@
     c.fillStyle=photo?'#fff':'#111';c.font='28px -apple-system, sans-serif';c.fillText('NOOPRUN',77,104);c.textAlign='right';c.fillText(dateLabel(r.finishedAt),1003,104);c.textAlign='left';
     const time=formatTime(r.elapsedMs);let size=r.elapsedMs>=3600000?160:240;c.font=`650 ${size}px -apple-system, sans-serif`;while(c.measureText(time).width>925&&size>80){size-=5;c.font=`650 ${size}px -apple-system, sans-serif`;}c.fillText(time,77,512);
     c.font='38px -apple-system, sans-serif';c.fillText('눕기 시간',77,608);
+    if(!photo){const picture=new Image();picture.src=window.NooprunArt.source(window.NooprunArt.forRecord(r));try{await picture.decode();const scale=Math.min(980/picture.width,270/picture.height);c.drawImage(picture,(1080-picture.width*scale)/2,620,picture.width*scale,picture.height*scale);}catch{toast('그림을 불러오지 못했어요. 다시 시도해 주세요.');return;}}
     c.strokeStyle=photo?'#ffffff55':'#0003';c.beginPath();c.moveTo(77,896);c.lineTo(1003,896);c.stroke();
     c.font='650 47px -apple-system, sans-serif';c.fillText('오늘도 잘 누웠다.',77,1030);
     c.textAlign='right';c.font='34px -apple-system, sans-serif';c.fillText('눕런',1003,1042);c.fillText('오늘은 여기까지.',1003,1100);
@@ -446,7 +447,6 @@
       saveHome(fix);closeModal();go('home');return;
     }
     if(action==='cancel-countdown'){cancelCountdown();return;}
-    if(action==='art'){window.NooprunArt.toggle();render();$('[data-action=art]')?.focus({preventScroll:true});return;}
     if(action==='effects'){window.NooprunSFX?.toggle();render();return;}
     if(action==='sound'){data.sound=!data.sound;persist();window.NooprunVoice?.setEnabled(data.sound);render();$('[data-action=sound]')?.focus({preventScroll:true});return;}
     if(action==='voice-preview'){say('start');return;}
@@ -489,13 +489,22 @@
   window.nooprun={state:()=>({view,runMetric,holding:!!hold,storageOK,active:active()?{...active(),elapsedMs:elapsed()}:null,result:result?{...result}:null,records:data.records.map(r=>({...r})),goal:data.goal,homeConfigured:!!data.home,homeRadius:data.home?.radius || null,gps:{...gpsState}}),showDemo};
   // Isolated, deterministic frames for the concept video. Synthetic data is never saved.
   // An actual active session is never replaced; no demo state is persisted.
-  function videoFrame({scene='home',elapsedMs=0,countdown:count=3}={}) {
-    if (!['home','countdown','running','paused','complete','share'].includes(scene)) throw new Error('Unknown video scene');
+  function videoFrame({scene='home',elapsedMs=0,countdown:count=3,records=[],scrollY=0}={}) {
+    if (!['home','countdown','running','paused','complete','share','history'].includes(scene)) throw new Error('Unknown video scene');
     if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid demo time');
     if (data.active) return {ok:false,reason:'real-session-active'};
     stopGPS();clearInterval(countdownTimer);countdownTimer=null;
     $('#modal')?.remove();$('#app').inert=false;modalAction=null;
-    if (scene === 'running' || scene === 'paused') {
+    if (scene === 'history') {
+      // Film fixtures are rendered through the real history UI, never saved.
+      // Restore the actual records even if rendering fails.
+      const savedRecords=data.records;
+      try {
+        data.records=records.filter(validRecord).map(r=>({...r}));
+        activityPeriod='주';demoSession=null;demoClockMs=null;view='history';render();
+        const scroller=$('.nrc-activity .nrc-content');if(scroller)scroller.scrollTop=Math.max(0,scrollY);
+      } finally {data.records=savedRecords;}
+    } else if (scene === 'running' || scene === 'paused') {
       const status=scene==='paused'?'paused':'running';
       const needsRender=view!=='running'||!demoSession||demoSession.status!==status;
       demoClockMs=elapsedMs;
