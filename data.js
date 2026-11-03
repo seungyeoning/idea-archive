@@ -11,9 +11,9 @@ window.ARCHIVE_ITEMS = [
     id: 'musubi', title: 'MUSUBI', category: 'app',
     tagline: '우리 사이의 거리, 한 가닥의 실로.',
     summary: '가까워지면 팽팽해지고, 멀어지면 느슨해지는 붉은 실. 숫자로만 보던 둘 사이의 거리를 작은 움직임으로 느껴 보는 앱을 생각했어요.',
-    status: '조작 시안', theme: '#111a30', cover: 'assets/musubi.webp', demo: 'demos/musubi/', video: 'assets/musubi.mp4',
-    features: ['거리 변화에 따라 달라지는 실의 움직임', '상대와 연결되는 초대 흐름', '작고 조용한 화면에서 관계의 거리 느끼기'],
-    note: '이 웹 시안의 거리·초대·위치는 예시입니다. 실제 GPS 공유나 iPhone 다이나믹 아일랜드 연동을 보여주는 화면은 아니에요.', updated: '2026-10-30'
+    status: '조작 시안', theme: '#111a30', cover: 'assets/musubi.webp', demo: 'previews/musubi/', video: 'previews/musubi/assets/01-musubi.mp4',
+    features: ['거리 변화에 따라 달라지는 실의 움직임', '상대와 연결되는 초대 흐름', '함께한 날과 오늘의 실 카드 남기기'],
+    note: '이 웹 시안의 거리·초대·위치는 예시입니다. 실제 GPS 공유나 iPhone 다이나믹 아일랜드 연동을 보여주는 화면은 아니에요.', updated: '2026-11-03'
   },
   {
     id: 'bottle', title: '표류', category: 'app',
